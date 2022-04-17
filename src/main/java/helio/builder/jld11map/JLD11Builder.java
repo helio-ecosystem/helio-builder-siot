@@ -43,12 +43,32 @@ public class JLD11Builder implements UnitBuilder {
 	@Override
 	public Set<TranslationUnit> parseMapping(String mapping) throws IncompatibleMappingException, TranslationUnitExecutionException, IncorrectMappingException, ExtensionNotFoundException {
 		StringBuilder cleanedMapping = new StringBuilder();
-		Map<String, DataProvider> providers  =extractProviders(mapping, cleanedMapping);
-		Template template = createTemplate(cleanedMapping.toString());
+		StringBuilder cleanedMappingTime = new StringBuilder();
+
+		Map<String, DataProvider> providers = extractProviders(mapping, cleanedMapping);
+		Integer time = extractTime(cleanedMapping, cleanedMappingTime);
+		Template template = createTemplate(cleanedMappingTime.toString());
 		JLD11MemoryUnit unit = new JLD11MemoryUnit(template, providers);
+		if(time!=null) {
+			unit.setScheduledTime(time);
+		}
 		return Sets.newHashSet(unit);
 	}
 
+	private static final String SCHEDULER_REGEX = "<#schedule\\s*time\\s*=\\s*(\\d+)\\s*>";
+	private Integer extractTime(StringBuilder mapping, StringBuilder cleanedMappingTime) {
+		Integer value = null;
+		Pattern p = Pattern.compile(SCHEDULER_REGEX);
+		Matcher m = p.matcher(mapping);
+		String auxMap = mapping.toString();
+		while(m.find()) {
+			auxMap = auxMap.replace(m.group(), ""); // term to replace
+			value = Integer.valueOf(m.group(1)); // variable to inject data	
+		}
+		cleanedMappingTime.append(auxMap);
+		return value;
+	}
+	
 	private Template createTemplate(String mapping) throws IncorrectMappingException, IncompatibleMappingException {
 		try (Writer out = new StringWriter()){
 			configuration.setSharedVariable(HANDLERS_FUNCTION_NAME, new Handlers());

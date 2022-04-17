@@ -39,7 +39,8 @@ public class JLD11MemoryUnit implements TranslationUnit {
 	private Template template;
 	private UnitType type;
 	private List<JLD11Triplet> triplets = new ArrayList<>();
-
+	private int refreshTime;
+	
 	public JLD11MemoryUnit(Template template, Map<String, DataProvider> providers) {
 		this.template = template;
 		this.triplets = providers.entrySet().parallelStream()
@@ -170,6 +171,18 @@ public class JLD11MemoryUnit implements TranslationUnit {
 	@Override
 	public void flushDataTranslated() {
 		translations.clear();
+	}
+
+	@Override
+	public int getScheduledTime() {
+		return refreshTime;
+	}
+
+	@Override
+	public void setScheduledTime(int scheduledTime) {
+		this.refreshTime= scheduledTime;
+		this.setUnitType(UnitType.Scheduled);
+		
 	}
 
 }
