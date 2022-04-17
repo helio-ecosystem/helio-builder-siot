@@ -37,7 +37,6 @@ public class JLD11MemoryUnit implements TranslationUnit {
 	private Map<String,String> translations = new ConcurrentHashMap<>(); // Change the value to List<String> for historical values in async providers
 	private ExecutorService service = null;
 	private Template template;
-	private Integer schedulingTime;
 	private UnitType type;
 	private List<JLD11Triplet> triplets = new ArrayList<>();
 
@@ -104,21 +103,11 @@ public class JLD11MemoryUnit implements TranslationUnit {
 
 
 	@Override
-	public Integer getScheduledTime() {
-		return this.schedulingTime;
-	}
-
-	@Override
 	public void configure(JsonObject configuration) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
-	public void setScheduledTime(Integer ms) {
-		this.schedulingTime = ms;
-
-	}
 
 	@Override
 	public UnitType getUnitType() {
