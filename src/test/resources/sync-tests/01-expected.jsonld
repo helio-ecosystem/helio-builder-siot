@@ -1,0 +1,13 @@
+{
+  "@context": "https://www.w3.org/2019/wot/td/v1",
+  "id": "urn:dev:ops:32473-WoTLamp-",
+  "dummy": {
+    "values": {
+      "numbers": [
+        100,
+        200
+      ],
+      "text": "sample text"
+    }
+  }
+}
