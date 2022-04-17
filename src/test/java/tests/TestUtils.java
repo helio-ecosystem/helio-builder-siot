@@ -15,6 +15,9 @@ import helio.blueprints.UnitBuilder;
 import helio.blueprints.components.ComponentType;
 import helio.blueprints.components.Components;
 import helio.blueprints.exceptions.ExtensionNotFoundException;
+import helio.blueprints.exceptions.IncompatibleMappingException;
+import helio.blueprints.exceptions.IncorrectMappingException;
+import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import helio.builder.jld11map.JLD11Builder;
 
 public class TestUtils {
@@ -44,7 +47,7 @@ public class TestUtils {
 
 		try {
 			Components.registerAndLoad(
-					"https://github.com/helio-ecosystem/helio-provider-files/releases/download/v0.1.0/helio-provider-files-0.1.0.jar",
+					"/Users/andreacimmino/Desktop/helio-provider-files-0.1.1.jar",
 					"helio.providers.files.FileProvider", ComponentType.PROVIDER);
 
 		} catch (Exception e) {
@@ -52,7 +55,7 @@ public class TestUtils {
 		}
 		try {
 			Components.registerAndLoad(
-					"https://github.com/helio-ecosystem/helio-provider-files/releases/download/v0.1.0/helio-provider-files-0.1.0.jar",
+					"/Users/andreacimmino/Desktop/helio-provider-files-0.1.1.jar",
 					"helio.providers.files.FileWatcherProvider", ComponentType.PROVIDER);
 
 		} catch (Exception e) {
@@ -75,26 +78,24 @@ public class TestUtils {
 		return null;
 	}
 
-	public static TranslationUnit build(String mappingFile) {
+	public static TranslationUnit build(String mappingFile) throws IncompatibleMappingException, TranslationUnitExecutionException, IncorrectMappingException, ExtensionNotFoundException {
 		TranslationUnit unit = null;
-		try {
+	
 			String mapping = readFile(mappingFile);
 
 			UnitBuilder builder = new JLD11Builder();
 			Set<TranslationUnit> list = builder.parseMapping(mapping);
 			unit = list.iterator().next();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 		return unit;
 	}
 
-	public static String runUnit(TranslationUnit unit, ExecutorService service) throws InterruptedException, ExecutionException {
+	public static String runUnit(TranslationUnit unit, ExecutorService service) throws InterruptedException, ExecutionException, TranslationUnitExecutionException {
 		String result =  "";
 	
 		Future<?> f = service.submit(unit.getTask());
 		f.get();
-		result = unit.getTranslations().get(0);
+		result = unit.getDataTranslated().get(0);
 		f.cancel(true);
 		service.shutdown();
 		

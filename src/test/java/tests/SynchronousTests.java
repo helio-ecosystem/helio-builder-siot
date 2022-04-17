@@ -48,12 +48,14 @@ public class SynchronousTests {
 	@Test
 	public void test04() throws Exception {
 		boolean isThrown = false;
+		ExecutorService service = Executors.newCachedThreadPool();
+		TranslationUnit unit =TestUtils.build("./src/test/resources/sync-tests/04-mapping.ldmap");
+		
 		try {
-			ExecutorService service = Executors.newFixedThreadPool(4);
-			TranslationUnit unit =TestUtils.build("./src/test/resources/sync-tests/04-mapping.ldmap");
 			TestUtils.runUnit(unit, service);
 		}catch(Exception e) {
-			isThrown = !e.toString().isEmpty();
+			isThrown = true;
+			System.out.println(e.toString());
 		}
 		Assert.assertTrue(isThrown);
 	}

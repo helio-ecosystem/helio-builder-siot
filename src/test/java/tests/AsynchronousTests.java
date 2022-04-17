@@ -42,7 +42,7 @@ public class AsynchronousTests {
 		while (i < 10) {
 			Future<?> f = service.submit(unit.getTask());
 			f.get();
-			System.out.println(unit.getTranslations());
+			System.out.println(unit.getDataTranslated());
 
 			Thread.sleep(500);
 		}

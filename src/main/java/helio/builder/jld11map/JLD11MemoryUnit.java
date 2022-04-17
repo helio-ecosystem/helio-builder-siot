@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -34,7 +33,8 @@ public class JLD11MemoryUnit implements TranslationUnit {
 
 	public static Logger logger = LoggerFactory.getLogger(JLD11MemoryUnit.class);
 
-	private Map<String,String> translations = new ConcurrentHashMap<>(); // Change the value to List<String> for historical values in async providers
+	private Map<String, String> translations = new ConcurrentHashMap<>(); // Change the value to List<String> for
+																			// historical values in async providers
 	private ExecutorService service = null;
 	private Template template;
 	private UnitType type;
@@ -42,56 +42,55 @@ public class JLD11MemoryUnit implements TranslationUnit {
 
 	public JLD11MemoryUnit(Template template, Map<String, DataProvider> providers) {
 		this.template = template;
-		this.triplets = providers.entrySet()
-			.parallelStream()
-			.map(entry -> new JLD11Triplet(entry.getKey(), entry.getValue()))
-			.collect(Collectors.toList());
+		this.triplets = providers.entrySet().parallelStream()
+				.map(entry -> new JLD11Triplet(entry.getKey(), entry.getValue())).collect(Collectors.toList());
 
-		int threads = (int) this.triplets.parallelStream().filter(triplet -> !(triplet.getProvider() instanceof AsyncDataProvider)).count();
-		this.service = Executors.newFixedThreadPool(threads+1);
+		int threads = (int) this.triplets.parallelStream()
+				.filter(triplet -> !(triplet.getProvider() instanceof AsyncDataProvider)).count();
+		this.service = Executors.newFixedThreadPool(threads + 1);
 
 		loadRunnables(false);
 
 		type = UnitType.Sync;
 	}
 
-
-
 	private void loadRunnables(boolean onlySync) {
-		if(!onlySync) {
-			this.triplets.parallelStream()
-				.filter(elem -> (elem.getProvider() instanceof AsyncDataProvider))
-				.forEach(elem -> elem.setFuture(service.submit(elem.getRunnable())));
-		}else {
-			this.triplets.parallelStream()
-				.filter(elem -> !(elem.getProvider() instanceof AsyncDataProvider))
-				.forEach(elem -> elem.setFuture(service.submit(elem.getRunnable())));
+		if (!onlySync) {
+			this.triplets.parallelStream().filter(elem -> (elem.getProvider() instanceof AsyncDataProvider))
+					.forEach(elem -> elem.setFuture(service.submit(elem.getRunnable())));
+		} else {
+			this.triplets.parallelStream().filter(elem -> !(elem.getProvider() instanceof AsyncDataProvider))
+					.forEach(elem -> elem.setFuture(service.submit(elem.getRunnable())));
 		}
 	}
 
-
 	@Override
-	public List<String> getTranslations() {
+	public List<String> getDataTranslated() throws TranslationUnitExecutionException {
 		List<String> templates = new ArrayList<>();
 		try {
-		templates.add(solveTemplate());
-		}catch(Exception e) {
-			logger.error(e.toString());
+			if(translations.containsKey(CODE_EXCEPTION)) {
+				StringBuilder error = new StringBuilder();
+				error.append(translations.get(CODE_EXCEPTION));
+				throw new TranslationUnitExecutionException(error.toString());
+			}
+			templates.add(solveTemplate());
+		} catch (Exception e) {
+			throw new TranslationUnitExecutionException(e.toString());
 		}
 		return templates;
 	}
 
-
-	private String solveTemplate() throws IncompatibleMappingException, IncorrectMappingException, TranslationUnitExecutionException {
+	private String solveTemplate()
+			throws IncompatibleMappingException, IncorrectMappingException, TranslationUnitExecutionException {
 		Map<String, Object> model = new HashMap<>();
-		try (Writer out = new StringWriter() ){
-			if(!translations.isEmpty()) {
+		try (Writer out = new StringWriter()) {
+			if (!translations.isEmpty()) {
 				model.putAll(translations);
 				translations.clear();
 
 				this.template.process(model, out);
-				return  out.toString();
-			}else {
+				return out.toString();
+			} else {
 				throw new TranslationUnitExecutionException("No data for inserting in the template");
 			}
 		} catch (IOException e) {
@@ -101,13 +100,11 @@ public class JLD11MemoryUnit implements TranslationUnit {
 		}
 	}
 
-
 	@Override
 	public void configure(JsonObject configuration) {
-		// TODO Auto-generated method stub
+		// empty
 
 	}
-
 
 	@Override
 	public UnitType getUnitType() {
@@ -124,49 +121,54 @@ public class JLD11MemoryUnit implements TranslationUnit {
 		return template.getName();
 	}
 
+	private static final String CODE_EXCEPTION = "translation_exception_internal_error-AAABBB";
 
 	@Override
-	public Callable<Void> getTask() {
+	public Runnable getTask() throws TranslationUnitExecutionException {
 		loadRunnables(true);
-		Callable<Void> runnable =  new Callable<Void>() {
+		Runnable runnable = new Runnable() {
 
 			@Override
-			public Void call() throws Exception {
-				for(int index=0; index < triplets.size(); index++) {
-					JLD11Triplet triplet = triplets.get(index);
-					boolean sync = !(triplet.getProvider() instanceof AsyncDataProvider);
-					if(sync) {
-						SyncFreemarkerRunnable runable = new SyncFreemarkerRunnable(triplet.getProvider());
-						String result = runable.run();
-						translations.put(triplet.getVariable(),result);
-					}else {
-						List<String> results = new ArrayList<>();
-						results.addAll(triplet.getRunnable().getQueue());
-						triplet.getRunnable().getQueue().clear();
-						if(!results.isEmpty()) {
-							translations.put(triplet.getVariable(), results.get(results.size()-1));
-						}else {
-							translations.put(triplet.getVariable(), "");
+			public void run() {
+				
+					for (int index = 0; index < triplets.size(); index++) {
+						JLD11Triplet triplet = triplets.get(index);
+						boolean sync = !(triplet.getProvider() instanceof AsyncDataProvider);
+						try {
+						if (sync) {
+							SyncFreemarkerRunnable runable = new SyncFreemarkerRunnable(triplet.getProvider());
+							String result = runable.run();
+							translations.put(triplet.getVariable(), result);
+						} else {
+							List<String> results = new ArrayList<>();
+							results.addAll(triplet.getRunnable().getQueue());
+							triplet.getRunnable().getQueue().clear();
+							if (!results.isEmpty()) {
+								translations.put(triplet.getVariable(), results.get(results.size() - 1));
+							} else {
+								translations.put(triplet.getVariable(), "");
 
+							}
+						}
+						} catch (Exception e) {
+							translations.put(CODE_EXCEPTION, e.toString());
+							
 						}
 					}
-				}
-				return null;
+				
 			}
 
 		};
 		try {
 			service.awaitTermination(500, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
+		} catch (InterruptedException e) {
+			throw new TranslationUnitExecutionException(e.toString());
 		}
 		return runnable;
 	}
 
-
-
 	@Override
-	public void flush() {
+	public void flushDataTranslated() {
 		translations.clear();
 	}
 

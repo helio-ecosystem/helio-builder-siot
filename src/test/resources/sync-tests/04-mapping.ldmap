@@ -1,14 +1,6 @@
-<#assign jpath=handlers("JsonHandler")>
 <#assign data1=providers(type="FileProvider", file="./src/test/resources/data-samples/not_exists.json")>
-<#assign data2=providers(type="FileProvider", file="./src/test/resources/data-samples/not_exists.json")>
 {
   "@context": "https://www.w3.org/2019/wot/td/v1",
   "id": "urn:dev:ops:32473-WoTLamp-",
-  "injected": "[=jpath.filter('$.@context.helio',data1)]",
-  "dummy": [=data2],
-  "combined": [
-    <#list jpath.filter('$.values.numbers',data2) as number>
-         "[=jpath.filter('$.@context.helio',data1)][=number]" <#if number?is_last><#else>,</#if>
-    </#list>
-  ]
+  "dummy": [=data1]
 }
