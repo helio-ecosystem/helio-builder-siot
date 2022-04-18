@@ -13,9 +13,13 @@ public class Handlers implements TemplateMethodModelEx{
 	@Override
 	public Object exec(@SuppressWarnings("rawtypes") List arguments) throws TemplateModelException {
 		String handler = String.valueOf(arguments.get(0));
-		DataHandler handlerObj = Components.getDataHandlers().get(handler);
-
-		return new HandlerWrapper(handlerObj);
+		try {
+			DataHandler handlerObj = Components.newHandlerInstance(handler);
+			return new HandlerWrapper(handlerObj);
+		}catch(Exception e) {
+			throw new TemplateModelException(e.toString());
+		}
+		
 	}
 
 }

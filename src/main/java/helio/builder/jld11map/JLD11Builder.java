@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -92,44 +90,15 @@ public class JLD11Builder implements UnitBuilder {
 			auxMap = auxMap.replace(m.group(), ""); // term to replace
 			String variable = m.group(1); // variable to inject data
 			JsonObject configuration = toJsonConfiguration(m.group(2)); // provider
-			DataProvider provider = Components.getDataProviders().get(configuration.get(KEYWORD_TYPE).getAsString());
-			if(provider ==null)
-				throw new ExtensionNotFoundException("Provider "+configuration.get(KEYWORD_TYPE)+" not found, make sure it was registered");
-			DataProvider cloned = (DataProvider) cloneObject(provider);
-			cloned.configure(configuration); //configure provider
-			providers.put(variable, cloned);
+			DataProvider provider = Components.newProviderInstance(configuration.get(KEYWORD_TYPE).getAsString());
+			provider.configure(configuration); //configure provider
+			providers.put(variable, provider);
 		}
 		cleanedMapping.append(auxMap);
 		return providers;
 	}
 
-	private static Object cloneObject(Object obj){
-        try{
-            @SuppressWarnings("deprecation")
-			Object clone = obj.getClass().newInstance();
-            for (Field field : obj.getClass().getDeclaredFields()) {
-                field.setAccessible(true);
-                if(field.get(obj) == null || Modifier.isFinal(field.getModifiers())){
-                    continue;
-                }
-                if(field.getType().isPrimitive() || field.getType().equals(String.class)
-                        || field.getType().getSuperclass().equals(Number.class)
-                        || field.getType().equals(Boolean.class)){
-                    field.set(clone, field.get(obj));
-                }else{
-                    Object childObj = field.get(obj);
-                    if(childObj == obj){
-                        field.set(clone, clone);
-                    }else{
-                        field.set(clone, cloneObject(field.get(obj)));
-                    }
-                }
-            }
-            return clone;
-        }catch(Exception e){
-            return null;
-        }
-    }
+	
 
 	private static final Gson GSON =new Gson();
 	private static final String KEYWORD_TYPE = "type";
