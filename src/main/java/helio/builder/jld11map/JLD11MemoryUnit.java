@@ -40,7 +40,7 @@ public class JLD11MemoryUnit implements TranslationUnit {
 	private UnitType type;
 	private List<JLD11Triplet> triplets = new ArrayList<>();
 	private int refreshTime;
-	
+
 	public JLD11MemoryUnit(Template template, Map<String, DataProvider> providers) {
 		this.template = template;
 		this.triplets = providers.entrySet().parallelStream()
@@ -74,15 +74,16 @@ public class JLD11MemoryUnit implements TranslationUnit {
 				error.append(translations.get(CODE_EXCEPTION));
 				throw new TranslationUnitExecutionException(error.toString());
 			}
-			templates.add(solveTemplate());
+			String value = solveTemplate();
+			if(value!=null)
+				templates.add(value);
 		} catch (Exception e) {
 			throw new TranslationUnitExecutionException(e.toString());
 		}
 		return templates;
 	}
 
-	private String solveTemplate()
-			throws IncompatibleMappingException, IncorrectMappingException, TranslationUnitExecutionException {
+	private String solveTemplate()throws IncompatibleMappingException, IncorrectMappingException {
 		Map<String, Object> model = new HashMap<>();
 		try (Writer out = new StringWriter()) {
 			if (!translations.isEmpty()) {
@@ -92,7 +93,8 @@ public class JLD11MemoryUnit implements TranslationUnit {
 				this.template.process(model, out);
 				return out.toString();
 			} else {
-				throw new TranslationUnitExecutionException("No data for inserting in the template");
+				logger.warn("no data to inject in the template");
+				return null;
 			}
 		} catch (IOException e) {
 			throw new IncompatibleMappingException(e.toString());
@@ -131,7 +133,7 @@ public class JLD11MemoryUnit implements TranslationUnit {
 
 			@Override
 			public void run() {
-				
+
 					for (int index = 0; index < triplets.size(); index++) {
 						JLD11Triplet triplet = triplets.get(index);
 						boolean sync = !(triplet.getProvider() instanceof AsyncDataProvider);
@@ -153,10 +155,10 @@ public class JLD11MemoryUnit implements TranslationUnit {
 						}
 						} catch (Exception e) {
 							translations.put(CODE_EXCEPTION, e.toString());
-							
+
 						}
 					}
-				
+
 			}
 
 		};
@@ -182,7 +184,7 @@ public class JLD11MemoryUnit implements TranslationUnit {
 	public void setScheduledTime(int scheduledTime) {
 		this.refreshTime= scheduledTime;
 		this.setUnitType(UnitType.Scheduled);
-		
+
 	}
 
 }

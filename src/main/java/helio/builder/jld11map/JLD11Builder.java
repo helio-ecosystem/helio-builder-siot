@@ -61,12 +61,12 @@ public class JLD11Builder implements UnitBuilder {
 		String auxMap = mapping.toString();
 		while(m.find()) {
 			auxMap = auxMap.replace(m.group(), ""); // term to replace
-			value = Integer.valueOf(m.group(1)); // variable to inject data	
+			value = Integer.valueOf(m.group(1)); // variable to inject data
 		}
 		cleanedMappingTime.append(auxMap);
 		return value;
 	}
-	
+
 	private Template createTemplate(String mapping) throws IncorrectMappingException, IncompatibleMappingException {
 		try (Writer out = new StringWriter()){
 			configuration.setSharedVariable(HANDLERS_FUNCTION_NAME, new Handlers());
@@ -98,7 +98,7 @@ public class JLD11Builder implements UnitBuilder {
 		return providers;
 	}
 
-	
+
 
 	private static final Gson GSON =new Gson();
 	private static final String KEYWORD_TYPE = "type";

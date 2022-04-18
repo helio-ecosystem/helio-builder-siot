@@ -41,7 +41,7 @@ public class SynchronousTests {
 		service.shutdownNow();
 		Assert.assertTrue(TestUtils.equals(result, expected));
 	}
-	
+
 	/**
 	 * It expects an exception to be thrown
 	 */
@@ -50,13 +50,26 @@ public class SynchronousTests {
 		boolean isThrown = false;
 		ExecutorService service = Executors.newCachedThreadPool();
 		TranslationUnit unit =TestUtils.build("./src/test/resources/sync-tests/04-mapping.ldmap");
-		
+
 		try {
 			TestUtils.runUnit(unit, service);
 		}catch(Exception e) {
 			isThrown = true;
-			System.out.println(e.toString());
+			//System.out.println(e.toString());
 		}
 		Assert.assertTrue(isThrown);
+	}
+	
+	@Test
+	public void test05() throws Exception {
+		ExecutorService service = Executors.newFixedThreadPool(4);
+		TranslationUnit unit = TestUtils.build("./src/test/resources/sync-tests/05-mapping.ldmap");
+		String result = TestUtils.runUnit(unit, service);
+		String expected = TestUtils.readFile("./src/test/resources/sync-tests/05-expected.csv");
+		service.shutdownNow();
+		System.out.println(result.trim());
+		Assert.assertTrue(result.trim().equals(expected));
+		
+		//System.out.println(result);
 	}
 }

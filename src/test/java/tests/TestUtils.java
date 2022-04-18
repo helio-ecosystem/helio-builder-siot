@@ -23,6 +23,12 @@ import helio.builder.jld11map.JLD11Builder;
 public class TestUtils {
 	static {
 		try {
+			Components.registerAndLoad("/Users/andreacimmino/Desktop/helio-provider-url-0.1.0.jar",
+					"provider.URLProvider", ComponentType.PROVIDER);
+		} catch (ExtensionNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
 			Components.registerAndLoad("/Users/andreacimmino/Desktop/helio-handler-csv-0.1.0.jar",
 					"handlers.CsvHandler", ComponentType.HANDLER);
 		} catch (ExtensionNotFoundException e) {
@@ -30,20 +36,13 @@ public class TestUtils {
 		}
 		try {
 			Components.registerAndLoad(
-					"https://github.com/helio-ecosystem/helio-handler-jayway/releases/download/v0.1.0/helio-handler-jayway-0.1.0.jar",
+					"https://github.com/helio-ecosystem/helio-handler-jayway/releases/download/v0.1.1/helio-handler-jayway-0.1.1.jar",
 					"handlers.JsonHandler", ComponentType.HANDLER);
 		} catch (ExtensionNotFoundException e) {
 			e.printStackTrace();
 		}
 
-		try {
-			Components.registerAndLoad(
-					"https://github.com/helio-ecosystem/helio-processor-jmapping/releases/download/v0.2.2/helio-processor-jmapping-0.2.2.jar",
-					"helio.jmapping.processor.JMappingProcessor", ComponentType.BUILDER);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	
 
 		try {
 			Components.registerAndLoad(
@@ -80,25 +79,25 @@ public class TestUtils {
 
 	public static TranslationUnit build(String mappingFile) throws IncompatibleMappingException, TranslationUnitExecutionException, IncorrectMappingException, ExtensionNotFoundException {
 		TranslationUnit unit = null;
-	
+
 			String mapping = readFile(mappingFile);
 
 			UnitBuilder builder = new JLD11Builder();
 			Set<TranslationUnit> list = builder.parseMapping(mapping);
 			unit = list.iterator().next();
-		
+
 		return unit;
 	}
 
 	public static String runUnit(TranslationUnit unit, ExecutorService service) throws InterruptedException, ExecutionException, TranslationUnitExecutionException {
 		String result =  "";
-	
+
 		Future<?> f = service.submit(unit.getTask());
 		f.get();
 		result = unit.getDataTranslated().get(0);
 		f.cancel(true);
 		service.shutdown();
-		
+
 		return result;
 	}
 	public static final Gson GSON = new Gson();

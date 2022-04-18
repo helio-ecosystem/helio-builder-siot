@@ -1,0 +1,7 @@
+<#assign jpath=handlers("JsonHandler")>
+<#assign data=providers(type="URLProvider", url="https://energy-load.auroral.dev.irradiare.biz/v1/energy/load-diagram/4ceb62a7-2e89-4d4b-8842-60ec8f723a9e")>
+
+"iso utc timestamp", "active power", "reactive inductive power", "reactive capacitive power", "voltage"
+<#list jpath.filter("$.*",data) as row>
+"[=jpath.filter("$.iso_utc_timestamp",row)]", "[=jpath.filter("$.active_power",row)]", "[=jpath.filter("$.reactive_inductive_power",row)]", "[=jpath.filter("$.reactive_capacitive_power",row)]", "[=jpath.filter("$.voltage",row)]"
+</#list>

@@ -47,7 +47,7 @@ public class FreemarkerHelioRunnable implements Runnable {
 		source.subscribe(data -> {
 				queue.add(data);// change this to add for having historical values
 		},e -> {exceptions.add(e.toString());});
-		
+
 	}
 
 

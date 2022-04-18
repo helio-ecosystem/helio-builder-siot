@@ -19,7 +19,7 @@ public class Handlers implements TemplateMethodModelEx{
 		}catch(Exception e) {
 			throw new TemplateModelException(e.toString());
 		}
-		
+
 	}
 
 }
