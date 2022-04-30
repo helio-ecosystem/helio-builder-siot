@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.helio-ecosystem</groupId>
-	<artifactId>helio-builder-jld11map</artifactId>
+	<artifactId>helio-builder-siot</artifactId>
 	<version>0.1.6</version>
 	<name>JSON LD 1.1 Mapping Processor</name>
 
@@ -21,6 +21,11 @@
 			<groupId>io.github.helio-ecosystem</groupId>
 			<artifactId>helio-blueprints</artifactId>
 			<version>0.4.20</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.github.andreacimminoarriaga</groupId>
+		    <artifactId>sparql-streamline</artifactId>
+		    <version>0.1.5</version>
 		</dependency>
 		<!-- Loggin -->
 		<dependency>

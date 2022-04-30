@@ -18,10 +18,18 @@ import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.blueprints.exceptions.IncompatibleMappingException;
 import helio.blueprints.exceptions.IncorrectMappingException;
 import helio.blueprints.exceptions.TranslationUnitExecutionException;
-import helio.builder.jld11map.JLD11Builder;
+import helio.builder.siot.SIoTBuilder;
 
 public class TestUtils {
+	
 	static {
+		
+		try {
+			Components.registerAndLoad("https://github.com/helio-ecosystem/helio-providers-web/releases/download/v0.1.1/helio-providers-web-0.1.1.jar",
+					 "helio.providers.HttpProvider", ComponentType.PROVIDER);
+		} catch (ExtensionNotFoundException e) {
+			e.printStackTrace();
+		}
 		try {
 			Components.registerAndLoad("/Users/andreacimmino/Desktop/helio-provider-url-0.1.0.jar",
 					"provider.URLProvider", ComponentType.PROVIDER);
@@ -46,7 +54,7 @@ public class TestUtils {
 
 		try {
 			Components.registerAndLoad(
-					"/Users/andreacimmino/Desktop/helio-provider-files-0.1.1.jar",
+					"https://github.com/helio-ecosystem/helio-provider-files/releases/download/v0.1.1/helio-provider-files-0.1.1.jar",
 					"helio.providers.files.FileProvider", ComponentType.PROVIDER);
 
 		} catch (Exception e) {
@@ -54,7 +62,7 @@ public class TestUtils {
 		}
 		try {
 			Components.registerAndLoad(
-					"/Users/andreacimmino/Desktop/helio-provider-files-0.1.1.jar",
+					"https://github.com/helio-ecosystem/helio-provider-files/releases/download/v0.1.1/helio-provider-files-0.1.1.jar",
 					"helio.providers.files.FileWatcherProvider", ComponentType.PROVIDER);
 
 		} catch (Exception e) {
@@ -81,13 +89,14 @@ public class TestUtils {
 		TranslationUnit unit = null;
 
 			String mapping = readFile(mappingFile);
-
-			UnitBuilder builder = new JLD11Builder();
+			UnitBuilder builder = new SIoTBuilder();
 			Set<TranslationUnit> list = builder.parseMapping(mapping);
 			unit = list.iterator().next();
 
 		return unit;
 	}
+	
+	
 
 	public static String runUnit(TranslationUnit unit, ExecutorService service) throws InterruptedException, ExecutionException, TranslationUnitExecutionException {
 		String result =  "";

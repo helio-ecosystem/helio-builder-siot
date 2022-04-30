@@ -1,0 +1,10 @@
+<#assign data=providers(type="FileProvider", file="./src/test/resources/data-samples/data.jsonld")>
+<#assign jpath=handlers("JsonHandler")>
+
+
+Site Code;Site Name;Site Type;Bulletin Date;Bulletin Date Formatted; NO2 Air Quality Band;    NO2 Air Quality Index;   Latest Capture;  Latest Week Ward Code;   Ward Name;   Easting Northing;    Longitude;   Latitude;    Spatial Accuracy;    Last Uploaded;   Location
+<#list jpath.filter('$.*', data) as json>
+    [=jpath.filter("$.['http://www.socrata.com/rdf/terms#rowID'].[0].@value", json)]
+   
+    
+</#list>

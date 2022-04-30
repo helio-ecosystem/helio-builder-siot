@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?><rdf:RDF
+			 xmlns:foaf="http://xmlns.com/foaf/0.1/"
+			 xmlns:skos="http://datos.gob.es/kos/sector-publico/sector/"
+			 xmlns:dcat="http://www.w3.org/ns/dcat#"
+			 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+			 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+			 xmlns:dct="http://purl.org/dc/terms/"
+			 xmlns:dc="http://purl.org/dc/elements/1.1/"
+			 xmlns:time="http://www.w3.org/2006/time#"
+			 xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+			 xmlns:j.0="http://www.w3.org/1999/xhtml/vocab#"
+			 xmlns:j.1="http://a9.com/-/spec/opensearch/1.1/"
+			 xmlns:api="http://purl.org/linked-data/api/vocab#">
+			<dcat:Catalog rdf:about="https://datos.madrid.es/egob/catalogo">
+			
+				
+					<dct:title xml:lang="es">Catálogo de datos abiertos del Ayuntamiento de Madrid</dct:title>
+					<dct:description xml:lang="es">
+						Catálogo de datos abiertos del Ayuntamiento de Madrid
+					</dct:description>
+					<dc:language>es</dc:language>
+					<foaf:homepage rdf:resource="https://datos.madrid.es"/>
+					<dct:license rdf:resource="https://datos.madrid.es/egob/catalogo/aviso-legal"/>
+					<dct:identifier>https://datos.madrid.es/egob/catalogo</dct:identifier>
+					<dcat:themeTaxonomy rdf:resource="http://datos.gob.es/kos/sector-publico/sector/" />
+					<dct:publisher rdf:resource="http://datos.gob.es/recurso/sector-publico/org/Organismo/L01280796"/>
+					<dct:extent>
+						<dct:SizeOrDuration>
+							<rdf:value rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</rdf:value>
+							<rdfs:label xml:lang="es">1</rdfs:label>
+						</dct:SizeOrDuration>
+					</dct:extent>
+					
+					
+					
+				
+				
+				
+					<dcat:dataset>
+						<dcat:Dataset rdf:about="https://datos.madrid.es/egob/catalogo/300573-0-unidades-luminosas-farolas">
+							<dct:identifier>https://datos.madrid.es/egob/catalogo/300573-0-unidades-luminosas-farolas</dct:identifier>
+							<dct:title xml:lang="es">Unidades luminosas (Farolas)</dct:title>
+							<dct:description xml:lang="es"><![CDATA[Entendemos por unidad luminosa cualquier soporte que nos da luz con independencia del número de lámparas o elementos leds que disponga, por ejemplo el típico báculo que tiene en su parte superior una lampara de sodio para la calzada y en su parte baja un globo para alumbrar a los peatones lo consideramos como una sola unidad aunque tenga varias lámparas.   Entendemos por tipol (tipo luminaria) tres posibilidades. LED cuando todas las luminarias de la unidad luminosa son de leds, DESCARGA cuando todas las luminarias son de descarga (antiguas incandescencia, halogenuros, etc) y LED-DESCARGA cuando en la unidad luminosa tenemos de los dos tipos, esto es muy normal en el centro de la ciudad donde la lámpara de la parte de arriba de los báculos es de descarga en cambio la luminaria den el mismo soporte para la acera es de leds   Adicionalmente para unidad luminosa se tiene todos los datos de localización georreferenciados con el callejero municipal y una campo adicional que es el modelo especifico de luminaria &ldquo;tipo_bloq&rdquo;.    Nota:  En este conjunto de datos, no se encuentran incluidos las unidades luminosas de parques y jardines y M-30.]]></dct:description>
+							<dcat:theme rdf:resource="http://datos.gob.es/kos/sector-publico/sector/energia" />
+														
+							<dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-08T13:13:25</dct:issued>
+							<dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2022-04-19T10:45:21</dct:modified>
+							
+							
+							<dc:language>es</dc:language>
+							<dct:publisher rdf:resource="http://datos.gob.es/recurso/sector-publico/org/Organismo/L01280796"/>
+							<dct:license rdf:resource="https://datos.madrid.es/egob/catalogo/aviso-legal"/>
+							
+							
+							
+							<dcat:distribution>
+  <dcat:Distribution>
+    <dct:title xml:lang="es">2022</dct:title>
+    <dcat:accessURL rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://datos.madrid.es/egob/catalogo/300573-0-unidades-luminosas-farolas.zip</dcat:accessURL>
+    <dcat:mediaType>application/zip</dcat:mediaType>
+    <dcat:byteSize>11738112</dcat:byteSize>
+  </dcat:Distribution>
+</dcat:distribution>
+<dcat:distribution>
+  <dcat:Distribution>
+    <dct:title xml:lang="es">2022</dct:title>
+    <dcat:accessURL rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://datos.madrid.es/egob/catalogo/300573-1-unidades-luminosas-farolas.csv</dcat:accessURL>
+    <dcat:mediaType>text/csv</dcat:mediaType>
+    <dcat:byteSize>23767040</dcat:byteSize>
+  </dcat:Distribution>
+</dcat:distribution>
+<dcat:distribution>
+  <dcat:Distribution>
+    <dct:title xml:lang="es">2022</dct:title>
+    <dcat:accessURL rdf:datatype="http://www.w3.org/2001/XMLSchema#anyURI">https://datos.madrid.es/egob/catalogo/300573-2-unidades-luminosas-farolas.xlsx</dcat:accessURL>
+    <dcat:mediaType>application/vnd.ms-excel</dcat:mediaType>
+    <dcat:byteSize>17162240</dcat:byteSize>
+  </dcat:Distribution>
+</dcat:distribution>
+
+						</dcat:Dataset>
+					</dcat:dataset>
+				
+				
+				
+					<dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2014-03-12T09:00:00</dct:issued>
+					
+								
+				
+			</dcat:Catalog>			 
+		</rdf:RDF>
