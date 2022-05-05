@@ -29,10 +29,11 @@ Check this link for the whole [list of versions](https://search.maven.org/artifa
   String mapping = readMapping("./src/test/resources/sync-tests/01-mapping.ldmap");
   ````
   3. Parse the mapping and build the translation units. The SIoT builder always generates one TranslationUnit per mapping provided:
+    
     ```java
-      UnitBuilder builder = new SIoTBuilder();
-			Set<TranslationUnit> list = builder.parseMapping(mapping);
-      TranslationUnit unit = list.iterator().next()
+    UnitBuilder builder = new SIoTBuilder();
+    Set<TranslationUnit> list = builder.parseMapping(mapping);
+    TranslationUnit unit = list.iterator().next()
     ```
   4. Run the translation unit for obtaining the results
   ````java
