@@ -42,7 +42,7 @@ public class ActionDirective implements TemplateDirectiveModel {
             if (paramName.equals(PARAM_NAME_TYPE)) {
 				type = paramValue;
 			}
-			else if (paramName.equals(PARAM_NAME_TYPE)) {
+			else if (paramName.equals(PARAM_NAME_CONF)) {
 				configuration = JsonParser.parseString(paramValue).getAsJsonObject();
 			}
 			else if (paramName.equals(PARAM_NAME_DATA)) {
