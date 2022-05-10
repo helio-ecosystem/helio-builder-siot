@@ -3,7 +3,8 @@ package helio.builder.siot.experimental.directives;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
+
+import org.apache.jena.ext.com.google.common.base.Strings;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -16,7 +17,8 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import helio.builder.siot.experimental.actions.Action;
 import helio.builder.siot.experimental.actions.ActionBuilder;
-import helio.builder.siot.experimental.actions.ActionNotFoundException;
+import helio.builder.siot.experimental.actions.errors.ActionNotFoundException;
+import helio.builder.siot.experimental.actions.errors.ActionParameterNotFoundException;
 
 public class ActionDirective implements TemplateDirectiveModel {
 
@@ -27,12 +29,29 @@ public class ActionDirective implements TemplateDirectiveModel {
 	@Override
 	public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
 			throws TemplateException, IOException {
-		String type = null;
-		JsonObject configuration = null;
-		String data = null;
-
 		// Retrieve data from directive
+		ParamsHolder paramsHolder = getParameters(params);
+        
+		// Validate directive parameters
+        try {
+        	validateParameters(paramsHolder);
+        } catch (ActionParameterNotFoundException e) {
+        	throw new TemplateModelException(e.getMessage());
+        }
+        
+		// Execute action
+		try {
+			Action action = ActionBuilder.build(paramsHolder.type);
+			action.run(paramsHolder.data);
+		} catch (ActionNotFoundException e) {
+			throw new TemplateModelException(e.getMessage());
+		}
+	}
+	
+	private ParamsHolder getParameters(Map params) {
+		ParamsHolder paramsHolder = new ParamsHolder();
 		Iterator paramIter = params.entrySet().iterator();
+		
         while (paramIter.hasNext()) {
         	Map.Entry ent = (Map.Entry) paramIter.next();
 
@@ -40,27 +59,36 @@ public class ActionDirective implements TemplateDirectiveModel {
             String paramValue = (String) ent.getValue();
 
             if (paramName.equals(PARAM_NAME_TYPE)) {
-				type = paramValue;
+				paramsHolder.type = paramValue;
 			}
 			else if (paramName.equals(PARAM_NAME_CONF)) {
-				configuration = JsonParser.parseString(paramValue).getAsJsonObject();
+				paramsHolder.configuration = JsonParser.parseString(paramValue).getAsJsonObject();
 			}
 			else if (paramName.equals(PARAM_NAME_DATA)) {
-				data = paramValue;
+				paramsHolder.data = paramValue;
 			}
 		}
-
-		// Check zone
-		// ...
-		
-		
-		try {
-			Action action = ActionBuilder.build(type);
-			action.configure(configuration);
-			action.run(data);
-		} catch (ActionNotFoundException e) {
-			throw new TemplateModelException(e.getMessage());
-		}
+        
+        return paramsHolder;
+	}
+	
+	private boolean validateParameters(ParamsHolder params) throws ActionParameterNotFoundException {
+		if (Strings.isNullOrEmpty(params.type)) {
+        	throw new ActionParameterNotFoundException("type");
+        }
+        else if (params.configuration.isJsonNull() || params.configuration.entrySet().isEmpty()) {
+        	throw new ActionParameterNotFoundException("configuration");
+        }
+        else if (Strings.isNullOrEmpty(params.data)) {
+        	throw new ActionParameterNotFoundException("data");
+    	}
+		return true;
+	}
+	
+	private class ParamsHolder {
+		String type;
+		JsonObject configuration;
+		String data;
 	}
 
 }
