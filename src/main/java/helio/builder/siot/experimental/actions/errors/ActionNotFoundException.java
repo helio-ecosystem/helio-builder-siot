@@ -1,4 +1,4 @@
-package helio.builder.siot.experimental.actions;
+package helio.builder.siot.experimental.actions.errors;
 
 public class ActionNotFoundException extends Exception{
 
