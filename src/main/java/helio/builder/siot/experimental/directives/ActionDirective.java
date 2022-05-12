@@ -15,7 +15,7 @@ import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import helio.builder.siot.experimental.actions.Action;
+import helio.blueprints.Action;
 import helio.builder.siot.experimental.actions.ActionBuilder;
 import helio.builder.siot.experimental.actions.errors.ActionNotFoundException;
 import helio.builder.siot.experimental.actions.errors.ActionParameterNotFoundException;
@@ -41,7 +41,8 @@ public class ActionDirective implements TemplateDirectiveModel {
         
 		// Execute action
 		try {
-			Action action = ActionBuilder.build(paramsHolder.type);
+			Action action = ActionBuilder.instance().build(paramsHolder.type);
+			action.configure(paramsHolder.configuration);
 			action.run(paramsHolder.data);
 		} catch (ActionNotFoundException e) {
 			throw new TemplateModelException(e.getMessage());
