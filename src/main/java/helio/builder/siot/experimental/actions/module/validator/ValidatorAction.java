@@ -1,10 +1,12 @@
-package helio.builder.siot.experimental.actions;
+package helio.builder.siot.experimental.actions.module.validator;
 
 import com.google.gson.JsonObject;
 
-public class HttpRequestAction implements Action {
+import helio.blueprints.Action;
 
-	public static final String NAME = "Http";
+public class ValidatorAction implements Action {
+
+	public static final String NAME = "Validator";
 	
 	@Override
 	public void configure(JsonObject configuration) {
