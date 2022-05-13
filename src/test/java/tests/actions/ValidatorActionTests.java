@@ -22,6 +22,8 @@ import tests.TestUtils;
  */
 public class ValidatorActionTests {
 
+	private final String DIR_RESOURCES = "./src/test/resources/action-samples/validator/";
+
 	/**
 	 * The JSON source is incorrect and the validator throws an error.
 	 */
@@ -34,13 +36,9 @@ public class ValidatorActionTests {
 	 * The JSON source is correct and the validator verifies it.
 	 */
 	@Test
-	public void test02_ValidateCorrectJSONDataWithJSONSChema() throws Exception {
+	public void test02_ValidateCorrectJSONDataWithJSONSChema() {
 		try {
-			ExecutorService service = Executors.newFixedThreadPool(4);
-			TranslationUnit unit = TestUtils.build("./src/test/resources/action-samples/validator/json-valid.txt");
-			String result = TestUtils.runUnit(unit, service);
-			service.shutdownNow();
-			System.out.println(result);
+			executeTestWithTemplate(DIR_RESOURCES + "02_json-template.txt");
 			assertTrue(true);
 		} catch (Exception e) {
 			assertTrue(e.getMessage(), false);
@@ -79,4 +77,13 @@ public class ValidatorActionTests {
 		assertTrue(false);
 	}
 	
+
+	private void executeTestWithTemplate(String templateFile) throws Exception {
+		ExecutorService service = Executors.newFixedThreadPool(4);
+		TranslationUnit unit = TestUtils.build(templateFile);
+		String result = TestUtils.runUnit(unit, service);
+		service.shutdownNow();
+		System.out.println(result);
+	}
+
 }
