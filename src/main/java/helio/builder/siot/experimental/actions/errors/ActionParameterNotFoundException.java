@@ -1,6 +1,6 @@
 package helio.builder.siot.experimental.actions.errors;
 
-public class ActionParameterNotFoundException extends Exception{
+public class ActionParameterNotFoundException extends Exception {
 
 	private static final long serialVersionUID = 32499341424L;
 
