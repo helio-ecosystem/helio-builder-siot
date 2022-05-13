@@ -14,6 +14,7 @@ import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
+import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
 import helio.blueprints.Action;
 import helio.builder.siot.experimental.actions.ActionBuilder;
@@ -43,7 +44,12 @@ public class ActionDirective implements TemplateDirectiveModel {
 		try {
 			Action action = ActionBuilder.instance().build(paramsHolder.type);
 			action.configure(paramsHolder.configuration);
-			action.run(paramsHolder.data);
+			String result = action.run(paramsHolder.data);
+
+			if (loopVars.length > 0) {
+				loopVars[0] = new SimpleScalar(result);
+			}
+
 		} catch (ActionNotFoundException e) {
 			throw new TemplateModelException(e.getMessage());
 		}
@@ -77,9 +83,11 @@ public class ActionDirective implements TemplateDirectiveModel {
 		if (Strings.isNullOrEmpty(params.type)) {
         	throw new ActionParameterNotFoundException("type");
         }
-        else if (params.configuration.isJsonNull() || params.configuration.entrySet().isEmpty()) {
+        /*
+		else if (params.configuration.isJsonNull() || params.configuration.entrySet().isEmpty()) {
         	throw new ActionParameterNotFoundException("configuration");
         }
+		*/
         else if (Strings.isNullOrEmpty(params.data)) {
         	throw new ActionParameterNotFoundException("data");
     	}
