@@ -1,8 +1,0 @@
-<#assign json="{\"file\": \"json-error.txt\", \"status\": false, "sequence" 0}">
-
-<@action type="JsonValidator" data=json; result>
-
-    <h3>Json with invalid schema</h3>
-    <p><pre>${result}</pre></p>
-
-</@action>

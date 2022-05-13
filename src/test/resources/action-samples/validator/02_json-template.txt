@@ -1,0 +1,10 @@
+<#assign json=providers(type="FileProvider", file="./src/test/resources/action-samples/validator/json-valid.json")>
+
+
+<#macro action type data; result>
+    <h3>Test 02: Json with a valid schema</h3>
+    <p><pre>${result}</pre></p>
+</#macro>
+
+<@action type="JsonValidator" data=json />
+
