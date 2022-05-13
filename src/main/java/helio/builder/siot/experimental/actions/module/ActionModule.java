@@ -8,7 +8,7 @@ public interface ActionModule {
 	String moduleName();
 	
 	default boolean isDefined(String type) {
-		return type.matches("^.*" + moduleName() + "$");
+		return type.toLowerCase().matches("^.*" + moduleName().toLowerCase() + "$");
 	}
 	
 	Action build(String type) throws ActionNotFoundException;
