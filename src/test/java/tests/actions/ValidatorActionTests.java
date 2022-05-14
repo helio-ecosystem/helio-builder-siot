@@ -2,21 +2,17 @@ package tests.actions;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
 import helio.blueprints.TranslationUnit;
-import helio.blueprints.exceptions.ExtensionNotFoundException;
-import helio.blueprints.exceptions.IncompatibleMappingException;
-import helio.blueprints.exceptions.IncorrectMappingException;
-import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import tests.TestUtils;
 
 /**
  * Set of test which validates the validator action module.
+ * 
  * @author Emilio
  *
  */
@@ -31,7 +27,7 @@ public class ValidatorActionTests {
 	public void test01_ValidateInvalidJSONDataWithJSONSChema() {
 		assertTrue(false);
 	}
-	
+
 	/**
 	 * The JSON source is correct and the validator verifies it.
 	 */
@@ -44,7 +40,7 @@ public class ValidatorActionTests {
 			assertTrue(e.getMessage(), false);
 		}
 	}
-	
+
 	/**
 	 * The JSON source is correct but the validator expected a XML data.
 	 */
@@ -52,7 +48,7 @@ public class ValidatorActionTests {
 	public void test03_ValidateJSONDataWithXMLChema() {
 		assertTrue(false);
 	}
-	
+
 	/**
 	 * The XML source is incorrect and the validator throws an error.
 	 */
@@ -60,7 +56,7 @@ public class ValidatorActionTests {
 	public void test04_ValidateInvalidXMLDataWithXMLSChema() {
 		assertTrue(false);
 	}
-	
+
 	/**
 	 * The XML source is correct and the validator verifies it.
 	 */
@@ -76,7 +72,6 @@ public class ValidatorActionTests {
 	public void test06_ValidateXMLDataWithJSONSChema() {
 		assertTrue(false);
 	}
-	
 
 	private void executeTestWithTemplate(String templateFile) throws Exception {
 		ExecutorService service = Executors.newFixedThreadPool(4);
