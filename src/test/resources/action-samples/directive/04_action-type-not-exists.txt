@@ -1,0 +1,7 @@
+<#assign json=providers(type="FileProvider", file="./src/test/resources/action-samples/directive/data.txt")>
+
+<@action type="Dummy" conf="{\"name\": \"test04\"}"; result>
+    <h3>Test 04: Directive with 'type' parameter in action directive which not exists in any module</h3>
+    <h5>Expected: ERROR</h5>
+    <p><pre>${result}</pre></p>
+</@action>
