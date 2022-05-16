@@ -5,7 +5,7 @@ public class ActionParameterNotFoundException extends Exception {
 	private static final long serialVersionUID = 32499341424L;
 
 	public ActionParameterNotFoundException(String actionParam) {
-		super("Parameter '" + actionParam + "' not found in action directive.");
+		super(ActionParameterNotFoundException.class.getCanonicalName() + ": Parameter '" + actionParam + "' not found in action directive.");
 	}
-	
+
 }
