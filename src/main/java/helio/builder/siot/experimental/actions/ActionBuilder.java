@@ -23,7 +23,10 @@ public class ActionBuilder {
 	}
 	
 	public static ActionBuilder instance() {
-		return builder != null ? builder : new ActionBuilder();
+		if (builder == null) {
+			builder = new ActionBuilder();
+		}
+		return builder;
 	}
 	
 	public List<ActionModule> moduleList() {
