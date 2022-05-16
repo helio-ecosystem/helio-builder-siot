@@ -2,13 +2,9 @@ package tests.actions;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.google.gson.JsonSyntaxException;
 
 import org.junit.Test;
-
-import helio.blueprints.TranslationUnit;
-import tests.TestUtils;
 
 /**
  * Set of test which validates the validator action module.
@@ -21,11 +17,21 @@ public class ValidatorActionTests {
 	private final String DIR_RESOURCES = "./src/test/resources/action-samples/validator/";
 
 	/**
-	 * The JSON source is incorrect and the validator throws an error.
+	 * The JSON source is incorrect and the validator throws a JsonSyntaxException.
 	 */
 	@Test
 	public void test01_ValidateInvalidJSONDataWithJSONSChema() {
-		assertTrue(false);
+		try {
+			ActionDirectiveTestUtils.executeTestWithTemplate(DIR_RESOURCES + "01_json-template.txt");
+			assertTrue(false);
+		} catch (Exception e) {
+			String exceptionExpected = JsonSyntaxException.class.getCanonicalName();
+			if (ActionDirectiveTestUtils.isExceptionMessageExpected(e.getMessage(), exceptionExpected)) {
+				assertTrue(true);
+			} else {
+				assertTrue(e.getMessage(), false);
+			}
+		}
 	}
 
 	/**
@@ -34,7 +40,7 @@ public class ValidatorActionTests {
 	@Test
 	public void test02_ValidateCorrectJSONDataWithJSONSChema() {
 		try {
-			executeTestWithTemplate(DIR_RESOURCES + "02_json-template.txt");
+			ActionDirectiveTestUtils.executeTestWithTemplate(DIR_RESOURCES + "02_json-template.txt");
 			assertTrue(true);
 		} catch (Exception e) {
 			assertTrue(e.getMessage(), false);
@@ -71,14 +77,6 @@ public class ValidatorActionTests {
 	@Test
 	public void test06_ValidateXMLDataWithJSONSChema() {
 		assertTrue(false);
-	}
-
-	private void executeTestWithTemplate(String templateFile) throws Exception {
-		ExecutorService service = Executors.newFixedThreadPool(4);
-		TranslationUnit unit = TestUtils.build(templateFile);
-		String result = TestUtils.runUnit(unit, service);
-		service.shutdownNow();
-		System.out.println(result);
 	}
 
 }
