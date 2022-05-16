@@ -16,6 +16,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
+
 import helio.blueprints.Action;
 import helio.builder.siot.experimental.actions.ActionBuilder;
 import helio.builder.siot.experimental.actions.errors.ActionNotFoundException;
@@ -49,7 +50,6 @@ public class ActionDirective implements TemplateDirectiveModel {
 			if (loopVars.length > 0) {
 				loopVars[0] = new SimpleScalar(result);
 			}
-
 		} catch (ActionNotFoundException e) {
 			throw new TemplateModelException(e.getMessage());
 		}
@@ -63,7 +63,7 @@ public class ActionDirective implements TemplateDirectiveModel {
 			Map.Entry ent = (Map.Entry) paramIter.next();
 
 			String paramName = (String) ent.getKey();
-			String paramValue = (String) ent.getValue();
+			String paramValue = ((SimpleScalar) ent.getValue()).getAsString();
 
 			if (paramName.equals(PARAM_NAME_TYPE)) {
 				paramsHolder.type = paramValue;
@@ -79,7 +79,7 @@ public class ActionDirective implements TemplateDirectiveModel {
 
 	private boolean validateParameters(ParamsHolder params) throws ActionParameterNotFoundException {
 		if (Strings.isNullOrEmpty(params.type)) {
-			throw new ActionParameterNotFoundException("type");
+			throw new ActionParameterNotFoundException(PARAM_NAME_TYPE);
 		}
 		/*
 		 * else if (params.configuration.isJsonNull() ||
@@ -88,7 +88,7 @@ public class ActionDirective implements TemplateDirectiveModel {
 		 * }
 		 */
 		else if (Strings.isNullOrEmpty(params.data)) {
-			throw new ActionParameterNotFoundException("data");
+			throw new ActionParameterNotFoundException(PARAM_NAME_DATA);
 		}
 		return true;
 	}
