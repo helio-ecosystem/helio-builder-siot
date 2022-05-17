@@ -82,14 +82,14 @@ public class ActionDirective implements TemplateDirectiveModel {
 			throw new ActionParameterNotFoundException(PARAM_NAME_TYPE);
 		}
 		/*
-		 * else if (params.configuration.isJsonNull() ||
-		 * params.configuration.entrySet().isEmpty()) {
-		 * throw new ActionParameterNotFoundException("configuration");
-		 * }
-		 */
+		else if (params.configuration.isJsonNull() ||
+		 	params.configuration.entrySet().isEmpty()) {
+		 	throw new ActionParameterNotFoundException("configuration");
+		}
 		else if (Strings.isNullOrEmpty(params.data)) {
 			throw new ActionParameterNotFoundException(PARAM_NAME_DATA);
 		}
+		*/
 		return true;
 	}
 
