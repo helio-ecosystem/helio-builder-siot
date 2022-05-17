@@ -2,6 +2,7 @@ package helio.builder.siot.experimental.actions.module;
 
 import helio.blueprints.Action;
 import helio.builder.siot.experimental.actions.errors.ActionNotFoundException;
+import helio.builder.siot.experimental.actions.module.request.HttpRequestAction;
 
 public class ActionRequestModule implements ActionModule {
 
@@ -14,7 +15,16 @@ public class ActionRequestModule implements ActionModule {
 	
 	@Override
 	public Action build(String type) throws ActionNotFoundException {
-		throw new ActionNotFoundException(type);
+		Action action;
+
+		if (type.equalsIgnoreCase(HttpRequestAction.TAG)) {
+			action = new HttpRequestAction();
+		}
+		else {
+			throw new ActionNotFoundException(type);
+		}
+		
+		return action;
 	}
 
 }
