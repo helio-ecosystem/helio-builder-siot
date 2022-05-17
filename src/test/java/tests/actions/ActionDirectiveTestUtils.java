@@ -19,6 +19,11 @@ import tests.TestUtils;
  */
 public class ActionDirectiveTestUtils {
 
+	public static final String DIR_DIRECTIVE_RESOURCES = "./src/test/resources/action-samples/directive/";
+	public static final String DIR_VALIDATOR_RESOURCES = "./src/test/resources/action-samples/validator/";
+	public static final String DIR_REQUEST_RESOURCES = "./src/test/resources/action-samples/request/";
+	
+
 	public static MockupActionTestModule getMockupModule() {
 		return new MockupActionTestModule();
 	}
