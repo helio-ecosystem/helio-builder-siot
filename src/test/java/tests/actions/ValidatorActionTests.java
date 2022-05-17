@@ -14,15 +14,14 @@ import org.junit.Test;
  */
 public class ValidatorActionTests {
 
-	private final String DIR_RESOURCES = "./src/test/resources/action-samples/validator/";
-
 	/**
 	 * The JSON source is incorrect and the validator throws a JsonSyntaxException.
 	 */
 	@Test
 	public void test01_ValidateInvalidJSONDataWithJSONSChema() {
 		try {
-			ActionDirectiveTestUtils.executeTestWithTemplate(DIR_RESOURCES + "01_json-template.txt");
+			ActionDirectiveTestUtils.executeTestWithTemplate(
+				ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "01_json-template.txt");
 			assertTrue(false);
 		} catch (Exception e) {
 			String exceptionExpected = JsonSyntaxException.class.getCanonicalName();
@@ -40,7 +39,8 @@ public class ValidatorActionTests {
 	@Test
 	public void test02_ValidateCorrectJSONDataWithJSONSChema() {
 		try {
-			ActionDirectiveTestUtils.executeTestWithTemplate(DIR_RESOURCES + "02_json-template.txt");
+			ActionDirectiveTestUtils.executeTestWithTemplate(
+				ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "02_json-template.txt");
 			assertTrue(true);
 		} catch (Exception e) {
 			assertTrue(e.getMessage(), false);
