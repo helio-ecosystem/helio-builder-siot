@@ -43,7 +43,7 @@ public class HttpRequestActionTests {
 	public void test03_HTTPRequestWithPOSTMethod() {
 		try {
 			ActionDirectiveTestUtils.executeTestWithTemplate(
-				ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "02_http-post.txt");
+				ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "03_http-post.txt");
 			assertTrue(true);
 		}
 		catch (Exception e) {
