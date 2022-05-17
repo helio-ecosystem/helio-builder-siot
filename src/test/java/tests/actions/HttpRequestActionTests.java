@@ -21,7 +21,8 @@ public class HttpRequestActionTests {
 			ActionDirectiveTestUtils.executeTestWithTemplate(
 				ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "01_http-get.txt");
 			assertTrue(true);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			assertTrue(e.getMessage(), false);
 		}
 	}
@@ -40,7 +41,14 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test03_HTTPRequestWithPOSTMethod() {
-		assertTrue(false);
+		try {
+			ActionDirectiveTestUtils.executeTestWithTemplate(
+				ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "02_http-post.txt");
+			assertTrue(true);
+		}
+		catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
 	}
 
 	/**
