@@ -1,4 +1,4 @@
-<#assign configuration=providers(type="FileProvider", file="./src/test/resources/action-samples/request/http-get-conf.json")>
+<#assign configuration=providers(type="FileProvider", file="./src/test/resources/action-samples/request/http-post-conf.json")>
 <#assign data=providers(type="FileProvider", file="./src/test/resources/action-samples/request/data.json")>
 
 <@action type="HttpRequest" data=data conf=configuration; result>
