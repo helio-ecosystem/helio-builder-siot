@@ -28,42 +28,45 @@ public class HttpRequestBuilder {
         return singleton;
     }
 
-    public String get(String url) {
+    public String get(String url, String... headers) {
         return executeRequest(HttpRequest
-            .newBuilder(URI.create(url))
-            .GET().build());
+                .newBuilder(URI.create(url))
+                .headers(headers)
+                .GET().build());
     }
 
-    public String post(String url, String data) {
+    public String post(String url, String data, String... headers) {
         return executeRequest(HttpRequest
-            .newBuilder(URI.create(url))
-            .POST(BodyPublishers.ofString(data)).build());
+                .newBuilder(URI.create(url))
+                .headers(headers)
+                .POST(BodyPublishers.ofString(data)).build());
     }
 
-    public String put(String url, String data) {
+    public String put(String url, String data, String... headers) {
         return executeRequest(HttpRequest
-            .newBuilder(URI.create(url))
-            .PUT(BodyPublishers.ofString(data)).build());
+                .newBuilder(URI.create(url))
+                .headers(headers)
+                .PUT(BodyPublishers.ofString(data)).build());
     }
 
-    public String delete(String url) {
+    public String delete(String url, String... headers) {
         return executeRequest(HttpRequest
-            .newBuilder(URI.create(url))
-            .DELETE().build());
+                .newBuilder(URI.create(url))
+                .headers(headers)
+                .DELETE().build());
     }
 
     private String executeRequest(HttpRequest request) {
     	String result = null;
-    	
+
         try {
         	HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-        	
         	if (response != null && response.statusCode() >= 200 && response.statusCode() < 300) {
         		result = response.body();
         	}
 		}
         catch (InterruptedException | IOException e) {
-		
+        	e.printStackTrace();
 		}
         
         return result;
