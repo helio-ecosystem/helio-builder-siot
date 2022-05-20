@@ -39,7 +39,7 @@ public class HttpRequestAction implements Action {
 				result = HttpRequestBuilder.instance().put(this.url, values);
 			}
 			else if (this.method.equalsIgnoreCase("delete")) {
-				result = HttpRequestBuilder.instance().get(this.url);
+				result = HttpRequestBuilder.instance().delete(this.url);
 			}
 		}
 
