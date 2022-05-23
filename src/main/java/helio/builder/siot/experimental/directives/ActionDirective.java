@@ -4,18 +4,13 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
+import freemarker.template.*;
 import org.apache.jena.ext.com.google.common.base.Strings;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateDirectiveModel;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateModelException;
 
 import helio.blueprints.Action;
 import helio.builder.siot.experimental.actions.ActionBuilder;
@@ -24,9 +19,9 @@ import helio.builder.siot.experimental.actions.errors.ActionParameterNotFoundExc
 
 public class ActionDirective implements TemplateDirectiveModel {
 
-	private static final String PARAM_NAME_TYPE = "type";
-	private static final String PARAM_NAME_CONF = "conf";
-	private static final String PARAM_NAME_DATA = "data";
+	private static final String PARAM_TYPE = "type";
+	private static final String PARAM_CONF = "conf";
+	private static final String PARAM_DATA = "data";
 
 	@Override
 	public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
@@ -67,13 +62,13 @@ public class ActionDirective implements TemplateDirectiveModel {
 			Map.Entry ent = (Map.Entry) paramIter.next();
 
 			String paramName = (String) ent.getKey();
-			String paramValue = ((SimpleScalar) ent.getValue()).getAsString();
+			String paramValue = ent.getValue().toString();
 
-			if (paramName.equals(PARAM_NAME_TYPE)) {
+			if (paramName.equals(PARAM_TYPE)) {
 				paramsHolder.type = paramValue;
-			} else if (paramName.equals(PARAM_NAME_CONF)) {
+			} else if (paramName.equals(PARAM_CONF)) {
 				paramsHolder.configuration = JsonParser.parseString(paramValue).getAsJsonObject();
-			} else if (paramName.equals(PARAM_NAME_DATA)) {
+			} else if (paramName.equals(PARAM_DATA)) {
 				paramsHolder.data = paramValue;
 			}
 		}
@@ -83,17 +78,8 @@ public class ActionDirective implements TemplateDirectiveModel {
 
 	private boolean validateParameters(ParamsHolder params) throws ActionParameterNotFoundException {
 		if (Strings.isNullOrEmpty(params.type)) {
-			throw new ActionParameterNotFoundException(PARAM_NAME_TYPE);
+			throw new ActionParameterNotFoundException(PARAM_TYPE);
 		}
-		/*
-		else if (params.configuration.isJsonNull() ||
-		 	params.configuration.entrySet().isEmpty()) {
-		 	throw new ActionParameterNotFoundException("configuration");
-		}
-		else if (Strings.isNullOrEmpty(params.data)) {
-			throw new ActionParameterNotFoundException(PARAM_NAME_DATA);
-		}
-		*/
 		return true;
 	}
 
