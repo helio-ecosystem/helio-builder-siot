@@ -1,0 +1,4 @@
+[
+    { "method": "GET", "url": "https://helio-tfm.mocklab.io/sc01/father" },
+    { "method": "GET", "url": "https://helio-tfm.mocklab.io/sc01/child" }
+]
