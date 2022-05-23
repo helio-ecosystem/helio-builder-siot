@@ -7,10 +7,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-
-import org.apache.http.HttpStatus;
-import org.apache.http.protocol.ResponseContent;
-
+import java.util.Map;
 
 public class HttpRequestBuilder {
     
@@ -28,32 +25,34 @@ public class HttpRequestBuilder {
         return singleton;
     }
 
-    public String get(String url, String... headers) {
-        return executeRequest(HttpRequest
-                .newBuilder(URI.create(url))
-                .headers(headers)
-                .GET().build());
+    public String get(String url, Map<String, String> headers) {
+        HttpRequest.Builder requestBuilder = createRequestBuilder(url, headers);
+        return executeRequest(requestBuilder.GET().build());
     }
 
-    public String post(String url, String data, String... headers) {
-        return executeRequest(HttpRequest
-                .newBuilder(URI.create(url))
-                .headers(headers)
-                .POST(BodyPublishers.ofString(data)).build());
+    public String post(String url, String data, Map<String, String> headers) {
+        HttpRequest.Builder requestBuilder = createRequestBuilder(url, headers);
+        return executeRequest(requestBuilder.POST(BodyPublishers.ofString(data)).build());
     }
 
-    public String put(String url, String data, String... headers) {
-        return executeRequest(HttpRequest
-                .newBuilder(URI.create(url))
-                .headers(headers)
-                .PUT(BodyPublishers.ofString(data)).build());
+    public String put(String url, String data, Map<String, String> headers) {
+        HttpRequest.Builder requestBuilder = createRequestBuilder(url, headers);
+        return executeRequest(requestBuilder.PUT(BodyPublishers.ofString(data)).build());
     }
 
-    public String delete(String url, String... headers) {
-        return executeRequest(HttpRequest
-                .newBuilder(URI.create(url))
-                .headers(headers)
-                .DELETE().build());
+    public String delete(String url, Map<String, String> headers) {
+        HttpRequest.Builder requestBuilder = createRequestBuilder(url, headers);
+        return executeRequest(requestBuilder.DELETE().build());
+    }
+
+    private HttpRequest.Builder createRequestBuilder(String url, Map<String, String> headers) {
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder(URI.create(url));
+
+        if (headers != null && !headers.isEmpty()) {
+            headers.forEach((k, v) -> requestBuilder.header(k, v));
+        }
+
+        return requestBuilder;
     }
 
     private String executeRequest(HttpRequest request) {
