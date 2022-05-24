@@ -43,7 +43,7 @@ public class ActionDirective implements TemplateDirectiveModel {
 			String result = action.run(paramsHolder.data);
 
 			// Only returns the result in one variable for the template if its defined
-			if (loopVars.length > 0) {
+			if (result != null && loopVars.length > 0) {
 				loopVars[0] = new SimpleScalar(result);
 			}
 		} catch (ActionNotFoundException e) {
