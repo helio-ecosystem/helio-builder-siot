@@ -40,19 +40,27 @@ public class HttpRequestAction implements Action {
 	public String run(String values) {
 		String result = null;
 
-		if (this.url != null && this.method != null) {
-			if (this.method.equalsIgnoreCase("get")) {
-				result = HttpRequestBuilder.instance().get(this.url, this.headers);
-			}
-			else if (this.method.equalsIgnoreCase("post")) {
-				result = HttpRequestBuilder.instance().post(this.url, values, this.headers);
-			}
-			else if (this.method.equalsIgnoreCase("put")) {
-				result = HttpRequestBuilder.instance().put(this.url, values, this.headers);
-			}
-			else if (this.method.equalsIgnoreCase("delete")) {
-				result = HttpRequestBuilder.instance().delete(this.url, this.headers);
-			}
+		if (this.url == null) {
+			throw new RuntimeException("HttpRequestActionParametersException: Url not found");
+		}
+		else if (this.method == null) {
+			throw new RuntimeException("HttpRequestActionParametersException: Method not found");
+		}
+
+		if (this.method.equalsIgnoreCase("get")) {
+			result = HttpRequestBuilder.instance().get(this.url, this.headers);
+		}
+		else if (this.method.equalsIgnoreCase("post")) {
+			result = HttpRequestBuilder.instance().post(this.url, values, this.headers);
+		}
+		else if (this.method.equalsIgnoreCase("put")) {
+			result = HttpRequestBuilder.instance().put(this.url, values, this.headers);
+		}
+		else if (this.method.equalsIgnoreCase("delete")) {
+			result = HttpRequestBuilder.instance().delete(this.url, this.headers);
+		}
+		else {
+			throw new RuntimeException("HttpRequestActionParametersException: Method " + this.method + " not exists");
 		}
 
 		return result;

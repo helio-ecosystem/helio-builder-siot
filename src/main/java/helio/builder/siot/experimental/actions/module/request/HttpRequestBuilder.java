@@ -9,6 +9,8 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Map;
 
+import javax.management.RuntimeErrorException;
+
 public class HttpRequestBuilder {
     
     private static HttpRequestBuilder singleton = null;
@@ -64,8 +66,8 @@ public class HttpRequestBuilder {
         		result = response.body();
         	}
 		}
-        catch (InterruptedException | IOException e) {
-        	e.printStackTrace();
+        catch (Exception e) {
+        	throw new RuntimeException("HttpRequestBuilderException: " + e.getMessage());
 		}
         
         return result;
