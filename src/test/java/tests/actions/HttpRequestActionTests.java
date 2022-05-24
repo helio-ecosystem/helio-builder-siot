@@ -2,36 +2,48 @@ package tests.actions;
 
 import static org.junit.Assert.assertTrue;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.apache.jena.base.Sys;
+import org.apache.jena.sparql.pfunction.library.assign;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import helio.blueprints.components.ComponentType;
 import helio.blueprints.components.Components;
+import tests.TestUtils;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Set of test which validates the HTTP Request Action from Action Request Module.
+ * Set of test which validates the HTTP Request Action from Action Request
+ * Module.
  * 
  * @author Emilio
  *
  */
 public class HttpRequestActionTests {
 
+	private final String BASE_URL = "https://helio-tfm.mocklab.io";
 
 	@BeforeClass
 	public static void setup() {
 		// For version 0.4.22
 		/*
-		Params:
-			null -> jar localization
-			string -> route for the class in this project
-			enum -> component type
-
-		Components.register(null, 
-			"helio.builder.siot.experimental.actions.module.request.HttpRequestAction",
-			ComponentType.ACTION);
-		*/
+		 * Params:
+		 * null -> jar localization
+		 * string -> route for the class in this project
+		 * enum -> component type
+		 * 
+		 * Components.register(null,
+		 * "helio.builder.siot.experimental.actions.module.request.HttpRequestAction",
+		 * ComponentType.ACTION);
+		 */
 	}
-
 
 	/*********************************
 	 * Http Request type tests
@@ -42,7 +54,21 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test01_HttpRequestWithoutUrlParameter_Then_ThrowsException() {
-		assertTrue(false);
+		try {
+			String mandatory = "<#assign configuration=providers(type=\"FileProvider\", file=\""
+					+ ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "/http-get-conf.json\")>\n";
+			String conf = createConfig("GET", null, null);
+			String dynamicTemplate = mandatory +
+					"<#assign conf=" + conf + ">\n" +
+					"<@action type=\"HttpRequest\" conf=conf; result>\n" +
+					"</@action>";
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			String[] expected = new String[] { "HttpRequestActionParametersException", "Url not found" };
+			compared(Arrays.copyOfRange(obtained, 1, obtained.length), expected);
+		}
 	}
 
 	/**
@@ -50,7 +76,21 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test02_HttpRequestWithoutMethodParameter_Then_ThrowsException() {
-		assertTrue(false);
+		try {
+			String mandatory = "<#assign configuration=providers(type=\"FileProvider\", file=\""
+					+ ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "/http-get-conf.json\")>\n";
+			String conf = createConfig(null, "test", null);
+			String dynamicTemplate = mandatory +
+					"<#assign conf=" + conf + ">\n" +
+					"<@action type=\"HttpRequest\" conf=conf; result>\n" +
+					"</@action>";
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			String[] expected = new String[] { "HttpRequestActionParametersException", "Method not found" };
+			compared(Arrays.copyOfRange(obtained, 1, obtained.length), expected);
+		}
 	}
 
 	/**
@@ -58,7 +98,20 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test03_HttpRequestWithUrlWhichNotExists_Then_ThrowsException() {
-		assertTrue(false);
+		try {
+			String mandatory = "<#assign configuration=providers(type=\"FileProvider\", file=\""
+					+ ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "/http-get-conf.json\")>\n";
+			String conf = createConfig("GET", "http://no-exists.es", null);
+			String dynamicTemplate = mandatory +
+					"<#assign conf=" + conf + ">\n" +
+					"<@action type=\"HttpRequest\" conf=conf; result>\n" +
+					"</@action>";
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			assertTrue(obtained[1].strip().equals("HttpRequestBuilderException"));
+		}
 	}
 
 	/**
@@ -66,7 +119,21 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test04_HttpRequestWithMethodWhichNotExists_Then_ThrowsException() {
-		assertTrue(false);
+		try {
+			String mandatory = "<#assign configuration=providers(type=\"FileProvider\", file=\""
+					+ ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "/http-get-conf.json\")>\n";
+			String conf = createConfig("test", "test", null);
+			String dynamicTemplate = mandatory +
+					"<#assign conf=" + conf + ">\n" +
+					"<@action type=\"HttpRequest\" conf=conf; result>\n" +
+					"</@action>";
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			String[] expected = new String[] { "HttpRequestActionParametersException", "Method test not exists" };
+			compared(Arrays.copyOfRange(obtained, 1, obtained.length), expected);
+		}
 	}
 
 	/**
@@ -76,10 +143,6 @@ public class HttpRequestActionTests {
 	public void test05_HttpRequestWithIncorrectFormatHeader_Then_ThrowsException() {
 		assertTrue(false);
 	}
-
-
-
-
 
 	/*********************************
 	 * GET Request tests
@@ -110,8 +173,7 @@ public class HttpRequestActionTests {
 			ActionDirectiveTestUtils.executeTestWithTemplate(
 					ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "01_http-get.txt");
 			assertTrue(true);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			assertTrue(e.getMessage(), false);
 		}
 	}
@@ -125,7 +187,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a GET request with correct headers and receives a response with OK status.
+	 * Performs a GET request with correct headers and receives a response with OK
+	 * status.
 	 */
 	@Test
 	public void test10_GetRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
@@ -133,7 +196,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a GET request with incorrect headers and receives a response with error status.
+	 * Performs a GET request with incorrect headers and receives a response with
+	 * error status.
 	 */
 	@Test
 	public void test11_GetRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
@@ -149,7 +213,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a GET request and receives a response with internal server error status.
+	 * Performs a GET request and receives a response with internal server error
+	 * status.
 	 */
 	@Test
 	public void test13_GetRequest_Then_ReceiveResponseWithServerErrorStatus() {
@@ -163,11 +228,6 @@ public class HttpRequestActionTests {
 	public void test14_GetRequestWhichTakesToMuch_Then_ReceiveTimeout() {
 		assertTrue(false);
 	}
-
-
-
-
-
 
 	/*********************************
 	 * POST Request tests
@@ -200,14 +260,14 @@ public class HttpRequestActionTests {
 
 			System.out.println("Content : " + r);
 			assertTrue(true);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			assertTrue(e.getMessage(), false);
 		}
 	}
 
 	/**
-	 * Performs a POST request with incorrect data and receives a response with error status.
+	 * Performs a POST request with incorrect data and receives a response with
+	 * error status.
 	 */
 	@Test
 	public void test18_PostRequestWithIncorrectData_Then_ReceiveErrorStatus() {
@@ -223,7 +283,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request with correct headers and receives a response with OK status.
+	 * Performs a POST request with correct headers and receives a response with OK
+	 * status.
 	 */
 	@Test
 	public void test20_PostRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
@@ -231,7 +292,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request with incorrect headers and receives a response with error status.
+	 * Performs a POST request with incorrect headers and receives a response with
+	 * error status.
 	 */
 	@Test
 	public void test21_PostRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
@@ -247,7 +309,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request and receives a response with internal server error status.
+	 * Performs a POST request and receives a response with internal server error
+	 * status.
 	 */
 	@Test
 	public void test23_PostRequest_Then_ReceiveResponseWithServerErrorStatus() {
@@ -261,11 +324,6 @@ public class HttpRequestActionTests {
 	public void test24_PostRequestWhichTakesToMuch_Then_ReceiveTimeout() {
 		assertTrue(false);
 	}
-
-
-
-
-
 
 	/*********************************
 	 * PUT Request tests
@@ -296,7 +354,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request with incorrect data and receives a response with error status.
+	 * Performs a PUT request with incorrect data and receives a response with error
+	 * status.
 	 */
 	@Test
 	public void test28_PutRequestWithIncorrectData_Then_ReceiveErrorStatus() {
@@ -312,7 +371,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request with correct headers and receives a response with OK status.
+	 * Performs a PUT request with correct headers and receives a response with OK
+	 * status.
 	 */
 	@Test
 	public void test30_PutRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
@@ -320,7 +380,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request with incorrect headers and receives a response with error status.
+	 * Performs a PUT request with incorrect headers and receives a response with
+	 * error status.
 	 */
 	@Test
 	public void test31_PutRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
@@ -336,7 +397,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request and receives a response with internal server error status.
+	 * Performs a PUT request and receives a response with internal server error
+	 * status.
 	 */
 	@Test
 	public void test33_PutRequest_Then_ReceiveResponseWithServerErrorStatus() {
@@ -350,11 +412,6 @@ public class HttpRequestActionTests {
 	public void test34_PutRequestWhichTakesToMuch_Then_ReceiveTimeout() {
 		assertTrue(false);
 	}
-
-
-
-
-
 
 	/*********************************
 	 * DELETE Request tests
@@ -393,7 +450,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a DELETE request with correct headers and receives a response with OK status.
+	 * Performs a DELETE request with correct headers and receives a response with
+	 * OK status.
 	 */
 	@Test
 	public void test39_DeleteRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
@@ -401,7 +459,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a DELETE request with incorrect headers and receives a response with error status.
+	 * Performs a DELETE request with incorrect headers and receives a response with
+	 * error status.
 	 */
 	@Test
 	public void test40_DeleteRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
@@ -417,7 +476,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a DELETE request and receives a response with internal server error status.
+	 * Performs a DELETE request and receives a response with internal server error
+	 * status.
 	 */
 	@Test
 	public void test42_DeleteRequest_Then_ReceiveResponseWithServerErrorStatus() {
@@ -430,6 +490,31 @@ public class HttpRequestActionTests {
 	@Test
 	public void test43_DeleteRequestWhichTakesToMuch_Then_ReceiveTimeout() {
 		assertTrue(false);
+	}
+
+	/**
+	 * Helper methods
+	 */
+
+	private String createConfig(String method, String url, String headers) {
+		JsonObject json = new JsonObject();
+		if (method != null) {
+			json.addProperty("method", method);
+		}
+		if (url != null) {
+			json.addProperty("url", url);
+		}
+		if (headers != null) {
+			json.add("headers", JsonParser.parseString(headers));
+		}
+		return json.toString();
+	}
+
+	private void compared(String[] obtained, String[] expected) {
+		assertTrue(obtained.length == expected.length);
+		for (int i = 0; i < obtained.length; i++) {
+			assertTrue(expected[i].strip().equals(obtained[i].strip()));
+		}
 	}
 
 }
