@@ -222,7 +222,7 @@ public class HttpRequestActionTests {
 	public void test10_GetRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-ok.json");
-			String conf = createConfig("GET", BASE_URL + "/tfm/header", headers);
+			String conf = createConfig("GET", BASE_URL + "/header", headers);
 			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			String expected = "success!";
@@ -240,7 +240,7 @@ public class HttpRequestActionTests {
 	public void test11_GetRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-error.json");
-			String conf = createConfig("GET", BASE_URL + "/tfm/header", headers);
+			String conf = createConfig("GET", BASE_URL + "/header", headers);
 			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -502,7 +502,15 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test35_DeleteRequestWithoutDataParameter_Then_NoThrowsException() {
-		assertTrue(false);
+		try {
+			String conf = createConfig("DELETE", BASE_URL + "/success", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
 	}
 
 	/**
@@ -510,7 +518,15 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test36_DeleteRequestWithoutHeaderParameter_Then_NoThrowsException() {
-		assertTrue(false);
+		try {
+			String conf = createConfig("DELETE", BASE_URL + "/success", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
 	}
 
 	/**
@@ -518,7 +534,16 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test37_DeleteRequest_Then_ReceiveResponseWithData() {
-		assertTrue(false);
+		try {
+			String conf = createConfig("DELETE", BASE_URL + "/success", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			String expected = "success!";
+			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertEquals(expected, obtained.strip());
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
 	}
 
 	/**
@@ -526,25 +551,53 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test38_DeleteRequest_Then_ReceiveEmptyResponse() {
-		assertTrue(false);
+		try {
+			String conf = createConfig("DELETE", BASE_URL + "/empty", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			String expected = "";
+			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertEquals(expected, obtained.strip());
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
 	}
 
 	/**
-	 * Performs a DELETE request with correct headers and receives a response with
-	 * OK status.
+	 * Performs a DELETE request with correct headers and receives a response with OK status.
 	 */
 	@Test
 	public void test39_DeleteRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
-		assertTrue(false);
+		try {
+			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-ok.json");
+			String conf = createConfig("DELETE", BASE_URL + "/header", headers);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			String expected = "success!";
+			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertEquals(expected, obtained.strip());
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
 	}
 
 	/**
-	 * Performs a DELETE request with incorrect headers and receives a response with
-	 * error status.
+	 * Performs a DELETE request with incorrect headers and receives a response with error status.
 	 */
 	@Test
 	public void test40_DeleteRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
-		assertTrue(false);
+		try {
+			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-error.json");
+			String conf = createConfig("DELETE", BASE_URL + "/header", headers);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(TAG_TEST_FAIL, false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
+			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+		}
 	}
 
 	/**
@@ -552,16 +605,35 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test41_DeleteRequest_Then_ReceiveResponseWithErrorStatus() {
-		assertTrue(false);
+		try {
+			String conf = createConfig("DELETE", BASE_URL + "/error", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(TAG_TEST_FAIL, false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			String[] expected = new String[] { "HttpRequestBuilderException", "400" };
+			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+		}
 	}
 
 	/**
-	 * Performs a DELETE request and receives a response with internal server error
-	 * status.
+	 * Performs a DELETE request and receives a response with internal server error status.
 	 */
 	@Test
 	public void test42_DeleteRequest_Then_ReceiveResponseWithServerErrorStatus() {
-		assertTrue(false);
+		try {
+			String conf = createConfig("DELETE", BASE_URL + "/error-server", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(TAG_TEST_FAIL, false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			String[] expected = new String[] { "HttpRequestBuilderException", "500" };
+			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+		}
 	}
 
 	/**
@@ -569,7 +641,20 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test43_DeleteRequestWhichTakesToMuch_Then_ReceiveTimeout() {
-		assertTrue(false);
+		try {
+			// We change timeout duration to get the timeout exception
+			HttpRequestBuilder.instance().setDefaultTimeout(Duration.of(2, ChronoUnit.SECONDS));
+
+			String conf = createConfig("DELETE", BASE_URL + "/timeout", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(TAG_TEST_FAIL, false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			String[] expected = new String[] { "HttpRequestBuilderException", "request timed out" };
+			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+		}
 	}
 
 	/**
