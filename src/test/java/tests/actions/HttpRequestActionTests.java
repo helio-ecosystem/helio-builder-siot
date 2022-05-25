@@ -1,23 +1,20 @@
 package tests.actions;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.apache.jena.base.Sys;
-import org.apache.jena.sparql.pfunction.library.assign;
+import helio.builder.siot.experimental.actions.module.request.HttpRequestBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import helio.blueprints.components.ComponentType;
-import helio.blueprints.components.Components;
 import tests.TestUtils;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Set of test which validates the HTTP Request Action from Action Request
@@ -29,6 +26,8 @@ import java.util.Map;
 public class HttpRequestActionTests {
 
 	private final String BASE_URL = "https://helio-tfm.mocklab.io";
+
+	private final String TAG_TEST_FAIL = "This test should be fail.";
 
 	@BeforeClass
 	public static void setup() {
@@ -43,6 +42,8 @@ public class HttpRequestActionTests {
 		 * "helio.builder.siot.experimental.actions.module.request.HttpRequestAction",
 		 * ComponentType.ACTION);
 		 */
+
+
 	}
 
 	/*********************************
@@ -55,19 +56,15 @@ public class HttpRequestActionTests {
 	@Test
 	public void test01_HttpRequestWithoutUrlParameter_Then_ThrowsException() {
 		try {
-			String mandatory = "<#assign configuration=providers(type=\"FileProvider\", file=\""
-					+ ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "/http-get-conf.json\")>\n";
 			String conf = createConfig("GET", null, null);
-			String dynamicTemplate = mandatory +
-					"<#assign conf=" + conf + ">\n" +
-					"<@action type=\"HttpRequest\" conf=conf; result>\n" +
-					"</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n</@action>";
+
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
-			assertTrue(false);
+			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestActionParametersException", "Url not found" };
-			compared(Arrays.copyOfRange(obtained, 1, obtained.length), expected);
+			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -77,19 +74,15 @@ public class HttpRequestActionTests {
 	@Test
 	public void test02_HttpRequestWithoutMethodParameter_Then_ThrowsException() {
 		try {
-			String mandatory = "<#assign configuration=providers(type=\"FileProvider\", file=\""
-					+ ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "/http-get-conf.json\")>\n";
 			String conf = createConfig(null, "test", null);
-			String dynamicTemplate = mandatory +
-					"<#assign conf=" + conf + ">\n" +
-					"<@action type=\"HttpRequest\" conf=conf; result>\n" +
-					"</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n</@action>";
+
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
-			assertTrue(false);
+			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestActionParametersException", "Method not found" };
-			compared(Arrays.copyOfRange(obtained, 1, obtained.length), expected);
+			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -99,18 +92,15 @@ public class HttpRequestActionTests {
 	@Test
 	public void test03_HttpRequestWithUrlWhichNotExists_Then_ThrowsException() {
 		try {
-			String mandatory = "<#assign configuration=providers(type=\"FileProvider\", file=\""
-					+ ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "/http-get-conf.json\")>\n";
 			String conf = createConfig("GET", "http://no-exists.es", null);
-			String dynamicTemplate = mandatory +
-					"<#assign conf=" + conf + ">\n" +
-					"<@action type=\"HttpRequest\" conf=conf; result>\n" +
-					"</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n</@action>";
+
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
-			assertTrue(false);
+			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			assertTrue(obtained[1].strip().equals("HttpRequestBuilderException"));
+			String obtained = e.getMessage().split(":")[1].strip();
+			String expected = "HttpRequestBuilderException";
+			assertEquals(expected, obtained);
 		}
 	}
 
@@ -120,19 +110,15 @@ public class HttpRequestActionTests {
 	@Test
 	public void test04_HttpRequestWithMethodWhichNotExists_Then_ThrowsException() {
 		try {
-			String mandatory = "<#assign configuration=providers(type=\"FileProvider\", file=\""
-					+ ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "/http-get-conf.json\")>\n";
 			String conf = createConfig("test", "test", null);
-			String dynamicTemplate = mandatory +
-					"<#assign conf=" + conf + ">\n" +
-					"<@action type=\"HttpRequest\" conf=conf; result>\n" +
-					"</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n</@action>";
+
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
-			assertTrue(false);
+			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestActionParametersException", "Method test not exists" };
-			compared(Arrays.copyOfRange(obtained, 1, obtained.length), expected);
+			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -141,7 +127,22 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test05_HttpRequestWithIncorrectFormatHeader_Then_ThrowsException() {
-		assertTrue(false);
+		try {
+			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-malformed.json");
+			String conf = "{ " +
+					"\"method\": \"GET\"," +
+					"\"url\": \"" + BASE_URL + "/tfm/header\"," +
+					"\"headers\": " + headers +
+					"}";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(TAG_TEST_FAIL, false);
+		} catch (Exception e) {
+			String obtained = e.getMessage().split(":")[0].strip();
+			String expected = "freemarker.core.ParseException";
+			assertEquals(expected, obtained);
+		}
 	}
 
 	/*********************************
@@ -153,7 +154,15 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test06_GetRequestWithoutDataParameter_Then_NoThrowsException() {
-		assertTrue(false);
+		try {
+			String conf = createConfig("GET", BASE_URL + "/success", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
 	}
 
 	/**
@@ -161,7 +170,15 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test07_GetRequestWithoutHeaderParameter_Then_NoThrowsException() {
-		assertTrue(false);
+		try {
+			String conf = createConfig("GET", BASE_URL + "/success", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(true);
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
 	}
 
 	/**
@@ -170,9 +187,12 @@ public class HttpRequestActionTests {
 	@Test
 	public void test08_GetRequest_Then_ReceiveResponseWithData() {
 		try {
-			ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "01_http-get.txt");
-			assertTrue(true);
+			String conf = createConfig("GET", BASE_URL + "/success", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			String expected = "success!";
+			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertEquals(expected, obtained.strip());
 		} catch (Exception e) {
 			assertTrue(e.getMessage(), false);
 		}
@@ -183,25 +203,53 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test09_GetRequest_Then_ReceiveEmptyResponse() {
-		assertTrue(false);
+		try {
+			String conf = createConfig("GET", BASE_URL + "/empty", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			String expected = "";
+			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertEquals(expected, obtained.strip());
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
 	}
 
 	/**
-	 * Performs a GET request with correct headers and receives a response with OK
-	 * status.
+	 * Performs a GET request with correct headers and receives a response with OK status.
 	 */
 	@Test
 	public void test10_GetRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
-		assertTrue(false);
+		try {
+			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-ok.json");
+			String conf = createConfig("GET", BASE_URL + "/tfm/header", headers);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			String expected = "success!";
+			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertEquals(expected, obtained.strip());
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
 	}
 
 	/**
-	 * Performs a GET request with incorrect headers and receives a response with
-	 * error status.
+	 * Performs a GET request with incorrect headers and receives a response with error status.
 	 */
 	@Test
 	public void test11_GetRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
-		assertTrue(false);
+		try {
+			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-error.json");
+			String conf = createConfig("GET", BASE_URL + "/tfm/header", headers);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(TAG_TEST_FAIL, false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
+			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+		}
 	}
 
 	/**
@@ -209,16 +257,35 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test12_GetRequest_Then_ReceiveResponseWithErrorStatus() {
-		assertTrue(false);
+		try {
+			String conf = createConfig("GET", BASE_URL + "/error", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(TAG_TEST_FAIL, false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			String[] expected = new String[] { "HttpRequestBuilderException", "400" };
+			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+		}
 	}
 
 	/**
-	 * Performs a GET request and receives a response with internal server error
-	 * status.
+	 * Performs a GET request and receives a response with internal server error status.
 	 */
 	@Test
 	public void test13_GetRequest_Then_ReceiveResponseWithServerErrorStatus() {
-		assertTrue(false);
+		try {
+			String conf = createConfig("GET", BASE_URL + "/error-server", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(TAG_TEST_FAIL, false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			String[] expected = new String[] { "HttpRequestBuilderException", "500" };
+			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+		}
 	}
 
 	/**
@@ -226,7 +293,20 @@ public class HttpRequestActionTests {
 	 */
 	@Test
 	public void test14_GetRequestWhichTakesToMuch_Then_ReceiveTimeout() {
-		assertTrue(false);
+		try {
+			// We change timeout duration to get the timeout exception
+			HttpRequestBuilder.instance().setDefaultTimeout(Duration.of(2, ChronoUnit.SECONDS));
+
+			String conf = createConfig("GET", BASE_URL + "/timeout", null);
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertTrue(TAG_TEST_FAIL, false);
+		} catch (Exception e) {
+			String[] obtained = e.getMessage().split(":");
+			String[] expected = new String[] { "HttpRequestBuilderException", "request timed out" };
+			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+		}
 	}
 
 	/*********************************
@@ -496,6 +576,11 @@ public class HttpRequestActionTests {
 	 * Helper methods
 	 */
 
+	private String mandatoryLine() {
+		return "<#assign configuration=providers(type=\"FileProvider\", file=\""
+				+ ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "/http-get-conf.json\")>\n";
+	}
+
 	private String createConfig(String method, String url, String headers) {
 		JsonObject json = new JsonObject();
 		if (method != null) {
@@ -510,10 +595,10 @@ public class HttpRequestActionTests {
 		return json.toString();
 	}
 
-	private void compared(String[] obtained, String[] expected) {
-		assertTrue(obtained.length == expected.length);
-		for (int i = 0; i < obtained.length; i++) {
-			assertTrue(expected[i].strip().equals(obtained[i].strip()));
+	private void compared(String[] expected, String[] obtained) {
+		assertTrue(expected.length == obtained.length);
+		for (int i = 0; i < expected.length; i++) {
+			assertEquals(expected[i].strip(), obtained[i].strip());
 		}
 	}
 
