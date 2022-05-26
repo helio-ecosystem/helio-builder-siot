@@ -64,7 +64,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestActionParametersException", "Url not found" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -83,7 +83,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestActionParametersException", "Method not found" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -121,7 +121,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestActionParametersException", "Method test not exists" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -261,7 +261,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -280,7 +280,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "400" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -300,7 +300,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "500" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -322,7 +322,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "request timed out" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -396,7 +396,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -455,7 +455,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -474,7 +474,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "400" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -494,7 +494,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "500" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -516,7 +516,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "request timed out" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -597,7 +597,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -656,7 +656,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -675,7 +675,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "400" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -695,7 +695,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "500" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -717,7 +717,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "request timed out" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -832,7 +832,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -851,7 +851,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "400" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -871,7 +871,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "500" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -893,7 +893,7 @@ public class HttpRequestActionTests {
 		} catch (Exception e) {
 			String[] obtained = e.getMessage().split(":");
 			String[] expected = new String[] { "HttpRequestBuilderException", "request timed out" };
-			compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
 		}
 	}
 
@@ -918,13 +918,6 @@ public class HttpRequestActionTests {
 			json.add("headers", JsonParser.parseString(headers));
 		}
 		return json.toString();
-	}
-
-	private void compared(String[] expected, String[] obtained) {
-		assertTrue(expected.length == obtained.length);
-		for (int i = 0; i < expected.length; i++) {
-			assertEquals(expected[i].strip(), obtained[i].strip());
-		}
 	}
 
 }

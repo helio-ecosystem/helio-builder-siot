@@ -1,7 +1,11 @@
 package tests.actions;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
+import helio.builder.siot.experimental.actions.errors.ActionNotFoundException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,6 +20,8 @@ import helio.builder.siot.experimental.actions.errors.ActionParameterNotFoundExc
  *
  */
 public class ActionDirectiveTests {
+
+	private final String TAG_TEST_FAIL = "This test should be fail.";
 
 	@BeforeClass
 	public static void addMockupModule() {
@@ -34,8 +40,8 @@ public class ActionDirectiveTests {
 	public void test01_ActionDirectiveWithoutType() {
 		try {
 			ActionDirectiveTestUtils.executeTestWithTemplate(
-				ActionDirectiveTestUtils.DIR_DIRECTIVE_RESOURCES + "01_action-no-type.txt");
-			assertTrue("Test is expected to fail", false);
+					ActionDirectiveTestUtils.DIR_DIRECTIVE_RESOURCES + "01_action-no-type.txt");
+			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
 			String exceptionMessage = e.getMessage().split(":")[2];
 			String exceptionExpected = ActionParameterNotFoundException.class.getCanonicalName();
@@ -54,10 +60,10 @@ public class ActionDirectiveTests {
 	public void test02_ActionDirectiveWithoutConfiguration() {
 		try {
 			ActionDirectiveTestUtils.executeTestWithTemplate(
-				ActionDirectiveTestUtils.DIR_DIRECTIVE_RESOURCES + "02_action-no-conf.txt");
+					ActionDirectiveTestUtils.DIR_DIRECTIVE_RESOURCES + "02_action-no-conf.txt");
 			assertTrue(true);
 		} catch (Exception e) {
-			assertTrue("Test is expected to fail", false);
+			assertTrue(e.getMessage(), false);
 		}
 	}
 
@@ -68,10 +74,10 @@ public class ActionDirectiveTests {
 	public void test03_ActionDirectiveWithoutData() {
 		try {
 			ActionDirectiveTestUtils.executeTestWithTemplate(
-				ActionDirectiveTestUtils.DIR_DIRECTIVE_RESOURCES + "03_action-no-data.txt");
+					ActionDirectiveTestUtils.DIR_DIRECTIVE_RESOURCES + "03_action-no-data.txt");
 			assertTrue(true);
 		} catch (Exception e) {
-			assertTrue("Test is expected to fail", false);
+			assertTrue(e.getMessage(), false);
 		}
 	}
 
@@ -82,17 +88,12 @@ public class ActionDirectiveTests {
 	public void test04_ActionDirectiveWithTypeWhichNotExists() {
 		try {
 			ActionDirectiveTestUtils.executeTestWithTemplate(
-				ActionDirectiveTestUtils.DIR_DIRECTIVE_RESOURCES + "04_action-type-not-exists.txt");
-			assertTrue("Test is expected to fail", false);
+					ActionDirectiveTestUtils.DIR_DIRECTIVE_RESOURCES + "04_action-type-not-exists.txt");
+			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String exceptionMessage = e.getMessage().split(":")[2];
-			String exceptionExpected = ActionParameterNotFoundException.class.getCanonicalName();
-
-			if (ActionDirectiveTestUtils.isExceptionMessageExpected(exceptionMessage, exceptionExpected)) {
-				assertTrue(true);
-			} else {
-				assertTrue(e.getMessage(), false);
-			}
+			String obtained = e.getMessage().split(":")[2].strip();
+			String expected = ActionNotFoundException.class.getCanonicalName().strip();
+			assertEquals(obtained, expected);
 		}
 	}
 

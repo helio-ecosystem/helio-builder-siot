@@ -1,5 +1,8 @@
 package tests.actions;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.PrintWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,6 +53,13 @@ public class ActionDirectiveTestUtils {
 
 	public static boolean isExceptionMessageExpected(String exceptionMessage, String exceptionExpected) {
 		return exceptionMessage.split(":")[0].strip().equals(exceptionExpected);
+	}
+
+	public static void compared(String[] expected, String[] obtained) {
+		assertTrue(expected.length == obtained.length);
+		for (int i = 0; i < expected.length; i++) {
+			assertEquals(expected[i].strip(), obtained[i].strip());
+		}
 	}
 
 	private static class MockupActionTestModule implements ActionModule {
