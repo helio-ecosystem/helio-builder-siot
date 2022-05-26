@@ -18,9 +18,14 @@ public class ActionScenariosTests {
 	/**
 	 * A test with an action directive inside other action directive. The aim of this test is the template priority in directives.
 	 * This test is expected to execute parent first and then child.
+	 *
+	 * Scenario 01:
+	 * 1. Send Get request for parent.
+	 * 2. Send Get request for child.
+	 * 3. Response template is executed first parent and then child.
 	 */
 	@Test
-	public void test01_templatePriorityActionInsideOtherAction() {
+	public void scenario01_Then_FirstParentSecondChild() {
 		try {
 			String result = ActionDirectiveTestUtils.executeTestWithTemplate(
 					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_01.txt");
@@ -41,7 +46,7 @@ public class ActionScenariosTests {
 	 * 3. Throws a JsonSyntaxException.
 	 */
 	@Test
-	public void test02_GetRequestAndResponseIsJsonInvalid_Then_ThrowsJsonSyntaxException() {
+	public void scenario02_Then_ThrowsJsonSyntaxException() {
 		try {
 			String result = ActionDirectiveTestUtils.executeTestWithTemplate(
 					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_01.txt");
@@ -63,7 +68,7 @@ public class ActionScenariosTests {
 	 * 4. Receive a response expected.
 	 */
 	@Test
-	public void test03_GetRequestWithJsonValidationAndSendByPostRequest_Then_ResponseIsSuccess() {
+	public void scenario03_Then_ResponseIsSuccess() {
 		try {
 			String obtained = ActionDirectiveTestUtils.executeTestWithTemplate(
 					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_03.txt");
