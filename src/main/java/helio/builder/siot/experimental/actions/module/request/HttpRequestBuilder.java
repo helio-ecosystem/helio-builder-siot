@@ -43,12 +43,12 @@ public class HttpRequestBuilder {
 
     public String post(String url, String data, Map<String, String> headers) {
         HttpRequest.Builder requestBuilder = createRequestBuilder(url, headers);
-        return executeRequest(requestBuilder.POST(BodyPublishers.ofString(data)).timeout(defaultTimeout).build());
+        return executeRequest(requestBuilder.POST(BodyPublishers.ofString(data != null ? data : "")).timeout(defaultTimeout).build());
     }
 
     public String put(String url, String data, Map<String, String> headers) {
         HttpRequest.Builder requestBuilder = createRequestBuilder(url, headers);
-        return executeRequest(requestBuilder.PUT(BodyPublishers.ofString(data)).timeout(defaultTimeout).build());
+        return executeRequest(requestBuilder.PUT(BodyPublishers.ofString(data != null ? data : "")).timeout(defaultTimeout).build());
     }
 
     public String delete(String url, Map<String, String> headers) {
