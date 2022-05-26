@@ -365,10 +365,10 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request and receives a response with ok status.
+	 * Performs a POST request with text data and receives a response with ok status.
 	 */
 	@Test
-	public void test17_PostRequestWithAnyCorrectData_Then_ReceiveOkStatus() {
+	public void test17_PostRequestWitTextData_Then_ReceiveOkStatus() {
 		try {
 			String r = ActionDirectiveTestUtils.executeTestWithTemplate(
 					ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "03_http-post.txt");
@@ -381,10 +381,10 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request and receives a response with ok status.
+	 * Performs a POST request with Json data and receives a response with ok status.
 	 */
 	@Test
-	public void test17_PostRequestWithJsonCorrectData_Then_ReceiveOkStatus() {
+	public void test18_PostRequestWithJsonData_Then_ReceiveOkStatus() {
 		try {
 			String conf = createConfig("POST", BASE_URL + "/body-json", null);
 			String data = "{\"content\": \"test\"}";
@@ -404,7 +404,7 @@ public class HttpRequestActionTests {
 	 * error status.
 	 */
 	@Test
-	public void test18_PostRequestWithIncorrectData_Then_ReceiveErrorStatus() {
+	public void test19_PostRequestWithIncorrectData_Then_ReceiveErrorStatus() {
 		try {
 			String conf = createConfig("POST", BASE_URL + "/success", null);
 			String data = "incorrect-data";
@@ -423,7 +423,7 @@ public class HttpRequestActionTests {
 	 * Performs a POST request and receives an empty response.
 	 */
 	@Test
-	public void test19_PostRequest_Then_ReceiveEmptyResponse() {
+	public void test20_PostRequest_Then_ReceiveEmptyResponse() {
 		try {
 			String conf = createConfig("POST", BASE_URL + "/empty", null);
 			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
@@ -438,11 +438,10 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request with correct headers and receives a response with OK
-	 * status.
+	 * Performs a POST request with correct headers and receives a response with OK status.
 	 */
 	@Test
-	public void test20_PostRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
+	public void test21_PostRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-ok.json");
 			String conf = createConfig("POST", BASE_URL + "/header", headers);
@@ -458,11 +457,10 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request with incorrect headers and receives a response with
-	 * error status.
+	 * Performs a POST request with incorrect headers and receives a response with error status.
 	 */
 	@Test
-	public void test21_PostRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
+	public void test22_PostRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-error.json");
 			String conf = createConfig("POST", BASE_URL + "/header", headers);
@@ -482,7 +480,7 @@ public class HttpRequestActionTests {
 	 * Performs a POST request and receives a response with error status.
 	 */
 	@Test
-	public void test22_PostRequest_Then_ReceiveResponseWithErrorStatus() {
+	public void test23_PostRequest_Then_ReceiveResponseWithErrorStatus() {
 		try {
 			String conf = createConfig("POST", BASE_URL + "/error", null);
 			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
@@ -498,11 +496,10 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request and receives a response with internal server error
-	 * status.
+	 * Performs a POST request and receives a response with internal server error status.
 	 */
 	@Test
-	public void test23_PostRequest_Then_ReceiveResponseWithServerErrorStatus() {
+	public void test24_PostRequest_Then_ReceiveResponseWithServerErrorStatus() {
 		try {
 			String conf = createConfig("POST", BASE_URL + "/error-server", null);
 			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
@@ -521,7 +518,7 @@ public class HttpRequestActionTests {
 	 * Performs a POST request which takes too much time.
 	 */
 	@Test
-	public void test24_PostRequestWhichTakesToMuch_Then_ReceiveTimeout() {
+	public void test25_PostRequestWhichTakesToMuch_Then_ReceiveTimeout() {
 		try {
 			// We change timeout duration to get the timeout exception
 			HttpRequestBuilder.instance().setDefaultTimeout(Duration.of(2, ChronoUnit.SECONDS));
@@ -547,7 +544,7 @@ public class HttpRequestActionTests {
 	 * Performs a PUT request without 'data' parameter which is optional.
 	 */
 	@Test
-	public void test25_PutRequestWithoutDataParameter_Then_NoThrowsException() {
+	public void test26_PutRequestWithoutDataParameter_Then_NoThrowsException() {
 		try {
 			String conf = createConfig("PUT", BASE_URL + "/empty-body", null);
 			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
@@ -565,7 +562,7 @@ public class HttpRequestActionTests {
 	 * Performs a PUT request without 'header' parameter which is optional.
 	 */
 	@Test
-	public void test26_PutRequestWithoutHeaderParameter_Then_NoThrowsException() {
+	public void test27_PutRequestWithoutHeaderParameter_Then_NoThrowsException() {
 		try {
 			String conf = createConfig("PUT", BASE_URL + "/empty-body", null);
 			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
@@ -580,16 +577,14 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request and receives a response with ok status.
+	 * Performs a PUT request with text data and receives a response with ok status.
 	 */
 	@Test
-	public void test27_PutRequestWithCorrectData_Then_ReceiveOkStatus() {
+	public void test28_PutRequestWithTextData_Then_ReceiveOkStatus() {
 		try {
 			String conf = createConfig("PUT", BASE_URL + "/success", null);
 			String data = "test-data";
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=\"" + data + "\" conf="
-					+ conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=\"" + data + "\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			String expected = "success!";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -600,11 +595,28 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request with incorrect data and receives a response with error
-	 * status.
+	 * Performs a PUT request with Json data and receives a response with ok status.
 	 */
 	@Test
-	public void test28_PutRequestWithIncorrectData_Then_ReceiveErrorStatus() {
+	public void test29_PutRequestWithJsonData_Then_ReceiveOkStatus() {
+		try {
+			String conf = createConfig("PUT", BASE_URL + "/body-json", null);
+			String data = "{\"content\": \"test\"}";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=" + data + " conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			String expected = "success!";
+			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertEquals(expected, obtained.strip());
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
+	}
+
+	/**
+	 * Performs a PUT request with incorrect data and receives a response with error status.
+	 */
+	@Test
+	public void test30_PutRequestWithIncorrectData_Then_ReceiveErrorStatus() {
 		try {
 			String conf = createConfig("PUT", BASE_URL + "/success", null);
 			String data = "incorrect-data";
@@ -624,7 +636,7 @@ public class HttpRequestActionTests {
 	 * Performs a PUT request and receives an empty response.
 	 */
 	@Test
-	public void test29_PutRequest_Then_ReceiveEmptyResponse() {
+	public void test31_PutRequest_Then_ReceiveEmptyResponse() {
 		try {
 			String conf = createConfig("PUT", BASE_URL + "/empty", null);
 			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
@@ -639,16 +651,14 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request with correct headers and receives a response with OK
-	 * status.
+	 * Performs a PUT request with correct headers and receives a response with OK status.
 	 */
 	@Test
-	public void test30_PutRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
+	public void test32_PutRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-ok.json");
 			String conf = createConfig("PUT", BASE_URL + "/header", headers);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			String expected = "success!";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -659,16 +669,14 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request with incorrect headers and receives a response with
-	 * error status.
+	 * Performs a PUT request with incorrect headers and receives a response with error status.
 	 */
 	@Test
-	public void test31_PutRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
+	public void test33_PutRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-error.json");
 			String conf = createConfig("PUT", BASE_URL + "/header", headers);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
@@ -683,11 +691,10 @@ public class HttpRequestActionTests {
 	 * Performs a PUT request and receives a response with error status.
 	 */
 	@Test
-	public void test32_PutRequest_Then_ReceiveResponseWithErrorStatus() {
+	public void test34_PutRequest_Then_ReceiveResponseWithErrorStatus() {
 		try {
 			String conf = createConfig("PUT", BASE_URL + "/error", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
@@ -699,15 +706,13 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request and receives a response with internal server error
-	 * status.
+	 * Performs a PUT request and receives a response with internal server error status.
 	 */
 	@Test
-	public void test33_PutRequest_Then_ReceiveResponseWithServerErrorStatus() {
+	public void test35_PutRequest_Then_ReceiveResponseWithServerErrorStatus() {
 		try {
 			String conf = createConfig("PUT", BASE_URL + "/error-server", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
@@ -722,14 +727,13 @@ public class HttpRequestActionTests {
 	 * Performs a PUT request which takes too much time.
 	 */
 	@Test
-	public void test34_PutRequestWhichTakesToMuch_Then_ReceiveTimeout() {
+	public void test36_PutRequestWhichTakesToMuch_Then_ReceiveTimeout() {
 		try {
 			// We change timeout duration to get the timeout exception
 			HttpRequestBuilder.instance().setDefaultTimeout(Duration.of(2, ChronoUnit.SECONDS));
 
 			String conf = createConfig("PUT", BASE_URL + "/timeout", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
@@ -748,11 +752,10 @@ public class HttpRequestActionTests {
 	 * Performs a DELETE request without 'data' parameter which is optional.
 	 */
 	@Test
-	public void test35_DeleteRequestWithoutDataParameter_Then_NoThrowsException() {
+	public void test37_DeleteRequestWithoutDataParameter_Then_NoThrowsException() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/success", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(true);
@@ -765,11 +768,10 @@ public class HttpRequestActionTests {
 	 * Performs a DELETE request without 'header' parameter which is optional.
 	 */
 	@Test
-	public void test36_DeleteRequestWithoutHeaderParameter_Then_NoThrowsException() {
+	public void test38_DeleteRequestWithoutHeaderParameter_Then_NoThrowsException() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/success", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(true);
@@ -782,11 +784,10 @@ public class HttpRequestActionTests {
 	 * Performs a DELETE request and receives a response with data.
 	 */
 	@Test
-	public void test37_DeleteRequest_Then_ReceiveResponseWithData() {
+	public void test39_DeleteRequest_Then_ReceiveResponseWithData() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/success", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			String expected = "success!";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -800,11 +801,10 @@ public class HttpRequestActionTests {
 	 * Performs a DELETE request and receives an empty response.
 	 */
 	@Test
-	public void test38_DeleteRequest_Then_ReceiveEmptyResponse() {
+	public void test40_DeleteRequest_Then_ReceiveEmptyResponse() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/empty", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			String expected = "";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -815,16 +815,14 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a DELETE request with correct headers and receives a response with
-	 * OK status.
+	 * Performs a DELETE request with correct headers and receives a response with OK status.
 	 */
 	@Test
-	public void test39_DeleteRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
+	public void test41_DeleteRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-ok.json");
 			String conf = createConfig("DELETE", BASE_URL + "/header", headers);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			String expected = "success!";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -835,16 +833,14 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a DELETE request with incorrect headers and receives a response with
-	 * error status.
+	 * Performs a DELETE request with incorrect headers and receives a response with error status.
 	 */
 	@Test
-	public void test40_DeleteRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
+	public void test42_DeleteRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-error.json");
 			String conf = createConfig("DELETE", BASE_URL + "/header", headers);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
@@ -859,11 +855,10 @@ public class HttpRequestActionTests {
 	 * Performs a DELETE request and receives a response with error status.
 	 */
 	@Test
-	public void test41_DeleteRequest_Then_ReceiveResponseWithErrorStatus() {
+	public void test43_DeleteRequest_Then_ReceiveResponseWithErrorStatus() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/error", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
@@ -875,15 +870,13 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a DELETE request and receives a response with internal server error
-	 * status.
+	 * Performs a DELETE request and receives a response with internal server error status.
 	 */
 	@Test
-	public void test42_DeleteRequest_Then_ReceiveResponseWithServerErrorStatus() {
+	public void test44_DeleteRequest_Then_ReceiveResponseWithServerErrorStatus() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/error-server", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
@@ -898,14 +891,13 @@ public class HttpRequestActionTests {
 	 * Performs a DELETE request which takes too much time.
 	 */
 	@Test
-	public void test43_DeleteRequestWhichTakesToMuch_Then_ReceiveTimeout() {
+	public void test45_DeleteRequestWhichTakesToMuch_Then_ReceiveTimeout() {
 		try {
 			// We change timeout duration to get the timeout exception
 			HttpRequestBuilder.instance().setDefaultTimeout(Duration.of(2, ChronoUnit.SECONDS));
 
 			String conf = createConfig("DELETE", BASE_URL + "/timeout", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
