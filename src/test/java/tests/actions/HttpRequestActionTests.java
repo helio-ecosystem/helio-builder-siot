@@ -368,7 +368,7 @@ public class HttpRequestActionTests {
 	 * Performs a POST request and receives a response with ok status.
 	 */
 	@Test
-	public void test17_PostRequestWithCorrectData_Then_ReceiveOkStatus() {
+	public void test17_PostRequestWithAnyCorrectData_Then_ReceiveOkStatus() {
 		try {
 			String r = ActionDirectiveTestUtils.executeTestWithTemplate(
 					ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "03_http-post.txt");
@@ -379,6 +379,25 @@ public class HttpRequestActionTests {
 			assertTrue(e.getMessage(), false);
 		}
 	}
+
+	/**
+	 * Performs a POST request and receives a response with ok status.
+	 */
+	@Test
+	public void test17_PostRequestWithJsonCorrectData_Then_ReceiveOkStatus() {
+		try {
+			String conf = createConfig("POST", BASE_URL + "/body-json", null);
+			String data = "{\"content\": \"test\"}";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=" + data + " conf=" + conf + "; result>\n[=result]\n</@action>";
+
+			String expected = "success!";
+			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
+			assertEquals(expected, obtained.strip());
+		} catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
+	}
+
 
 	/**
 	 * Performs a POST request with incorrect data and receives a response with

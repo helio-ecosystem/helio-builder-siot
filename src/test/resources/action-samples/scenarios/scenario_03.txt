@@ -1,0 +1,10 @@
+<#assign confRaw=providers(type="FileProvider", file="./src/test/resources/action-samples/scenarios/scenario_03_conf.json")>
+<#assign conf=confRaw?eval>
+
+<@action type="HttpRequest" conf=conf[0]; r1>
+    <@action type="JsonValidator" data=r1>
+        <@action type="HttpRequest" data=r1 conf=conf[1]; r2>
+            [=r2]
+        </@action>
+    </@action>
+</@action>

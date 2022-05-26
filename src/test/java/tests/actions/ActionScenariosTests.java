@@ -1,5 +1,6 @@
 package tests.actions;
 
+import com.google.gson.JsonSyntaxException;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -12,6 +13,8 @@ import static org.junit.Assert.*;
  */
 public class ActionScenariosTests {
 
+	private final String TAG_TEST_FAIL = "This test should be fail.";
+
 	/**
 	 * A test with an action directive inside other action directive. The aim of this test is the template priority in directives.
 	 * This test is expected to execute parent first and then child.
@@ -23,15 +26,55 @@ public class ActionScenariosTests {
 					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_01.txt");
 			String[] expected = new String[] {"father", "child"};
 			String[] obtained = result.strip().split("\n");
-
-			assertTrue(expected.length == obtained.length);
-			for (int i = 0; i < obtained.length; i++) {
-				assertTrue(expected[i].equals(obtained[i].strip()));
-			}
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 		catch (Exception e) {
 			assertTrue(e.getMessage(), false);
 		}
 	}
+
+
+	/**
+	 * Scenario 02:
+	 * 1. Send a GET request.
+	 * 2. Validates the response expected with Json format.
+	 * 3. Throws a JsonSyntaxException.
+	 */
+	@Test
+	public void test02_GetRequestAndResponseIsJsonInvalid_Then_ThrowsJsonSyntaxException() {
+		try {
+			String result = ActionDirectiveTestUtils.executeTestWithTemplate(
+					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_01.txt");
+			assertTrue(TAG_TEST_FAIL, false);
+		}
+		catch (Exception e) {
+			String expected = JsonSyntaxException.class.getCanonicalName().strip();
+			String obtained = e.getMessage().split(":")[0].strip();
+			assertEquals(expected, obtained);
+		}
+	}
+
+
+	/**
+	 * Scenario 03:
+	 * 1. Send a GET request.
+	 * 2. Validates the response expected with Json format.
+	 * 3. Send a Post request with the previous data.
+	 * 4. Receive a response expected.
+	 */
+	@Test
+	public void test03_GetRequestWithJsonValidationAndSendByPostRequest_Then_ResponseIsSuccess() {
+		try {
+			String obtained = ActionDirectiveTestUtils.executeTestWithTemplate(
+					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_03.txt");
+			String expected = "success!";
+			assertEquals(expected, obtained.strip());
+		}
+		catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
+	}
+
+
 
 }
