@@ -81,5 +81,24 @@ public class ActionScenariosTests {
 	}
 
 
+	/**
+	 * Scenario 04:
+	 * 1. Send a GET request.
+	 * 3. Send a Post request with the previous data which is a String.
+	 * 4. Receive a response expected.
+	 */
+	@Test
+	public void scenario04_Then_ResponseIsSuccess() {
+		try {
+			String obtained = ActionDirectiveTestUtils.executeTestWithTemplate(
+					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_04.txt");
+			String expected = "success!";
+			assertEquals(expected, obtained.strip());
+		}
+		catch (Exception e) {
+			assertTrue(e.getMessage(), false);
+		}
+	}
+
 
 }
