@@ -1,0 +1,5 @@
+<#assign xml=providers(type="FileProvider", file="./src/test/resources/action-samples/validator/xml-valid.xml")>
+
+<@action type="XmlValidator" data=xml; result>
+    [=result]
+</@action>
