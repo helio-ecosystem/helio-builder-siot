@@ -29,6 +29,8 @@ public class ActionDirectiveTestUtils {
 	public static final String DIR_REQUEST_RESOURCES = DIR_RESOURCES + "request/";
 	public static final String DIR_SCENARIOS_RESOURCES = DIR_RESOURCES + "scenarios/";
 
+	public static final String TAG_TEST_FAIL = "This test should be fail.";
+
 	public static MockupActionTestModule getMockupModule() {
 		return new MockupActionTestModule();
 	}
