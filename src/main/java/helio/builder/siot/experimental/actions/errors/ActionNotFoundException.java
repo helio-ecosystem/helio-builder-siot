@@ -1,6 +1,8 @@
 package helio.builder.siot.experimental.actions.errors;
 
-public class ActionNotFoundException extends Exception {
+import helio.blueprints.exceptions.ActionException;
+
+public class ActionNotFoundException extends ActionException {
 
 	private static final long serialVersionUID = 12238394L;
 

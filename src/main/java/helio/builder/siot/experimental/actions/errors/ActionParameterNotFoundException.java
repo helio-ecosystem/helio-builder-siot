@@ -1,6 +1,8 @@
 package helio.builder.siot.experimental.actions.errors;
 
-public class ActionParameterNotFoundException extends Exception {
+import helio.blueprints.exceptions.ActionException;
+
+public class ActionParameterNotFoundException extends ActionException {
 
 	private static final long serialVersionUID = 32499341424L;
 
