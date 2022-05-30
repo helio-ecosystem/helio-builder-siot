@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import helio.blueprints.Action;
+import helio.blueprints.exceptions.ActionException;
 import helio.builder.siot.experimental.actions.errors.ActionNotFoundException;
 import helio.builder.siot.experimental.actions.module.ActionDatabaseModule;
 import helio.builder.siot.experimental.actions.module.ActionModule;
@@ -45,7 +46,7 @@ public class ActionBuilder {
 		return modules.removeIf(m -> m.moduleName().equals(newModule.moduleName()));
 	}
 	
-	public Action build(String type) throws ActionNotFoundException {
+	public Action build(String type) throws ActionException {
 		return modules.stream()
 				.filter(m -> m.isDefined(type))
 				.findFirst()

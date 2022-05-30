@@ -1,5 +1,7 @@
 package helio.builder.siot.experimental.actions.module.request;
 
+import helio.builder.siot.experimental.actions.errors.HttpRequestPerformException;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -36,22 +38,22 @@ public class HttpRequestBuilder {
         this.defaultTimeout = defaultTimeout;
     }
 
-    public String get(String url, Map<String, String> headers) {
+    public String get(String url, Map<String, String> headers) throws HttpRequestPerformException {
         HttpRequest.Builder requestBuilder = createRequestBuilder(url, headers);
         return executeRequest(requestBuilder.GET().timeout(defaultTimeout).build());
     }
 
-    public String post(String url, String data, Map<String, String> headers) {
+    public String post(String url, String data, Map<String, String> headers) throws HttpRequestPerformException {
         HttpRequest.Builder requestBuilder = createRequestBuilder(url, headers);
         return executeRequest(requestBuilder.POST(BodyPublishers.ofString(data != null ? data : "")).timeout(defaultTimeout).build());
     }
 
-    public String put(String url, String data, Map<String, String> headers) {
+    public String put(String url, String data, Map<String, String> headers) throws HttpRequestPerformException {
         HttpRequest.Builder requestBuilder = createRequestBuilder(url, headers);
         return executeRequest(requestBuilder.PUT(BodyPublishers.ofString(data != null ? data : "")).timeout(defaultTimeout).build());
     }
 
-    public String delete(String url, Map<String, String> headers) {
+    public String delete(String url, Map<String, String> headers) throws HttpRequestPerformException {
         HttpRequest.Builder requestBuilder = createRequestBuilder(url, headers);
         return executeRequest(requestBuilder.DELETE().timeout(defaultTimeout).build());
     }
@@ -66,7 +68,7 @@ public class HttpRequestBuilder {
         return requestBuilder;
     }
 
-    private String executeRequest(HttpRequest request) {
+    private String executeRequest(HttpRequest request) throws HttpRequestPerformException {
     	String result = null;
 
         try {
@@ -77,15 +79,15 @@ public class HttpRequestBuilder {
                 }
                 // Custom error codes
                 else  if (response.statusCode() >= 400 && response.statusCode() < 500) {
-                    throw new Exception(String.valueOf(response.statusCode()));
+                    throw new HttpRequestPerformException("Bad request (" + response.statusCode() + ")");
                 }
                 else  if (response.statusCode() >= 500 && response.statusCode() < 600) {
-                    throw new Exception(String.valueOf(response.statusCode()));
+                    throw new HttpRequestPerformException("Internal server error (" + response.statusCode() + ")");
                 }
             }
 		}
         catch (Exception e) {
-        	throw new RuntimeException("HttpRequestBuilderException: " + e.getMessage());
+        	throw new HttpRequestPerformException(e.getMessage());
 		}
         
         return result;

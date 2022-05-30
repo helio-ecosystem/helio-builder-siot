@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import freemarker.template.*;
+import helio.blueprints.exceptions.ActionException;
 import org.apache.jena.ext.com.google.common.base.Strings;
 
 import com.google.gson.JsonObject;
@@ -46,7 +47,7 @@ public class ActionDirective implements TemplateDirectiveModel {
 			if (result != null && loopVars.length > 0) {
 				loopVars[0] = new SimpleScalar(result);
 			}
-		} catch (ActionNotFoundException e) {
+		} catch (ActionException e) {
 			throw new TemplateModelException(e.getMessage());
 		}
 

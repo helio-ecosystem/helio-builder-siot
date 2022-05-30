@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import helio.blueprints.Action;
+import helio.blueprints.exceptions.ActionException;
+import helio.builder.siot.experimental.actions.errors.HttpRequestParametersException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,14 +39,14 @@ public class HttpRequestAction implements Action {
 	}
 
 	@Override
-	public String run(String values) {
+	public String run(String values) throws ActionException {
 		String result = null;
 
 		if (this.url == null) {
-			throw new RuntimeException("HttpRequestActionParametersException: Url not found");
+			throw new HttpRequestParametersException("Url not found");
 		}
 		else if (this.method == null) {
-			throw new RuntimeException("HttpRequestActionParametersException: Method not found");
+			throw new HttpRequestParametersException("Method not found");
 		}
 
 		if (this.method.equalsIgnoreCase("get")) {
@@ -60,7 +62,7 @@ public class HttpRequestAction implements Action {
 			result = HttpRequestBuilder.instance().delete(this.url, this.headers);
 		}
 		else {
-			throw new RuntimeException("HttpRequestActionParametersException: Method " + this.method + " not exists");
+			throw new HttpRequestParametersException("Method " + this.method + " not exists");
 		}
 
 		return result;
