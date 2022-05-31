@@ -6,7 +6,13 @@ import static org.junit.Assert.assertTrue;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import freemarker.template.TemplateModelException;
+import helio.blueprints.components.ComponentType;
+import helio.blueprints.components.Components;
+import helio.builder.siot.experimental.actions.errors.HttpRequestParametersException;
+import helio.builder.siot.experimental.actions.errors.HttpRequestPerformException;
 import helio.builder.siot.experimental.actions.module.request.HttpRequestBuilder;
+import org.apache.jena.base.Sys;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -43,6 +49,9 @@ public class HttpRequestActionTests {
 		 * ComponentType.ACTION);
 		 */
 
+		Components.register(null, "helio.builder.siot.experimental.actions.module.request.HttpRequestAction",
+				ComponentType.ACTION);
+
 	}
 
 	/*********************************
@@ -56,15 +65,14 @@ public class HttpRequestActionTests {
 	public void test01_HttpRequestWithoutUrlParameter_Then_ThrowsException() {
 		try {
 			String conf = createConfig("GET", null, null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestActionParametersException", "Url not found" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestParametersException.class.getCanonicalName(), "Url not found" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -75,15 +83,14 @@ public class HttpRequestActionTests {
 	public void test02_HttpRequestWithoutMethodParameter_Then_ThrowsException() {
 		try {
 			String conf = createConfig(null, "test", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestActionParametersException", "Method not found" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestParametersException.class.getCanonicalName(), "Method not found" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -94,14 +101,13 @@ public class HttpRequestActionTests {
 	public void test03_HttpRequestWithUrlWhichNotExists_Then_ThrowsException() {
 		try {
 			String conf = createConfig("GET", "http://no-exists.es", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String obtained = e.getMessage().split(":")[1].strip();
-			String expected = "HttpRequestBuilderException";
+			String obtained = cleanErrorMessage(e.getMessage())[0].strip();
+			String expected = HttpRequestPerformException.class.getCanonicalName().strip();
 			assertEquals(expected, obtained);
 		}
 	}
@@ -113,15 +119,14 @@ public class HttpRequestActionTests {
 	public void test04_HttpRequestWithMethodWhichNotExists_Then_ThrowsException() {
 		try {
 			String conf = createConfig("test", "test", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
-					+ "; result>\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestActionParametersException", "Method test not exists" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestParametersException.class.getCanonicalName(), "Method test not exists" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -131,8 +136,7 @@ public class HttpRequestActionTests {
 	@Test
 	public void test05_HttpRequestWithIncorrectFormatHeader_Then_ThrowsException() {
 		try {
-			String headers = TestUtils
-					.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-malformed.json");
+			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-malformed.json");
 			String conf = "{ " +
 					"\"method\": \"GET\"," +
 					"\"url\": \"" + BASE_URL + "/tfm/header\"," +
@@ -259,9 +263,9 @@ public class HttpRequestActionTests {
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Bad request (404)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -278,9 +282,9 @@ public class HttpRequestActionTests {
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "400" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Bad request (400)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -298,9 +302,9 @@ public class HttpRequestActionTests {
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "500" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Internal server error (500)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -320,9 +324,9 @@ public class HttpRequestActionTests {
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "request timed out" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "request timed out" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -365,15 +369,14 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request with text data and receives a response with ok status.
+	 * Performs a POST request with text data and receives a response with ok
+	 * status.
 	 */
 	@Test
 	public void test17_PostRequestWitTextData_Then_ReceiveOkStatus() {
 		try {
 			String r = ActionDirectiveTestUtils.executeTestWithTemplate(
 					ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "03_http-post.txt");
-
-			System.out.println("Content : " + r);
 			assertTrue(true);
 		} catch (Exception e) {
 			assertTrue(e.getMessage(), false);
@@ -381,14 +384,16 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request with Json data and receives a response with ok status.
+	 * Performs a POST request with Json data and receives a response with ok
+	 * status.
 	 */
 	@Test
 	public void test18_PostRequestWithJsonData_Then_ReceiveOkStatus() {
 		try {
 			String conf = createConfig("POST", BASE_URL + "/body-json", null);
 			String data = "{\"content\": \"test\"}";
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=" + data + " conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=" + data + " conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			String expected = "success!";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -397,7 +402,6 @@ public class HttpRequestActionTests {
 			assertTrue(e.getMessage(), false);
 		}
 	}
-
 
 	/**
 	 * Performs a POST request with incorrect data and receives a response with
@@ -408,14 +412,15 @@ public class HttpRequestActionTests {
 		try {
 			String conf = createConfig("POST", BASE_URL + "/success", null);
 			String data = "incorrect-data";
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=\"" + data + "\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=\"" + data + "\" conf="
+					+ conf + "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Bad request (404)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -438,7 +443,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request with correct headers and receives a response with OK status.
+	 * Performs a POST request with correct headers and receives a response with OK
+	 * status.
 	 */
 	@Test
 	public void test21_PostRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
@@ -457,7 +463,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a POST request with incorrect headers and receives a response with error status.
+	 * Performs a POST request with incorrect headers and receives a response with
+	 * error status.
 	 */
 	@Test
 	public void test22_PostRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
@@ -470,9 +477,9 @@ public class HttpRequestActionTests {
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Bad request (404)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -489,14 +496,15 @@ public class HttpRequestActionTests {
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "400" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Bad request (400)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
 	/**
-	 * Performs a POST request and receives a response with internal server error status.
+	 * Performs a POST request and receives a response with internal server error
+	 * status.
 	 */
 	@Test
 	public void test24_PostRequest_Then_ReceiveResponseWithServerErrorStatus() {
@@ -508,9 +516,9 @@ public class HttpRequestActionTests {
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "500" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Internal server error (500)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -530,9 +538,9 @@ public class HttpRequestActionTests {
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "request timed out" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "request timed out" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -584,7 +592,8 @@ public class HttpRequestActionTests {
 		try {
 			String conf = createConfig("PUT", BASE_URL + "/success", null);
 			String data = "test-data";
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=\"" + data + "\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=\"" + data + "\" conf="
+					+ conf + "; result>\n[=result]\n</@action>";
 
 			String expected = "success!";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -602,7 +611,8 @@ public class HttpRequestActionTests {
 		try {
 			String conf = createConfig("PUT", BASE_URL + "/body-json", null);
 			String data = "{\"content\": \"test\"}";
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=" + data + " conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" data=" + data + " conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			String expected = "success!";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -613,7 +623,8 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request with incorrect data and receives a response with error status.
+	 * Performs a PUT request with incorrect data and receives a response with error
+	 * status.
 	 */
 	@Test
 	public void test30_PutRequestWithIncorrectData_Then_ReceiveErrorStatus() {
@@ -626,9 +637,9 @@ public class HttpRequestActionTests {
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Bad request (404)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -651,14 +662,16 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request with correct headers and receives a response with OK status.
+	 * Performs a PUT request with correct headers and receives a response with OK
+	 * status.
 	 */
 	@Test
 	public void test32_PutRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-ok.json");
 			String conf = createConfig("PUT", BASE_URL + "/header", headers);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			String expected = "success!";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -669,21 +682,23 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a PUT request with incorrect headers and receives a response with error status.
+	 * Performs a PUT request with incorrect headers and receives a response with
+	 * error status.
 	 */
 	@Test
 	public void test33_PutRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-error.json");
 			String conf = createConfig("PUT", BASE_URL + "/header", headers);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Bad request (404)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -694,32 +709,35 @@ public class HttpRequestActionTests {
 	public void test34_PutRequest_Then_ReceiveResponseWithErrorStatus() {
 		try {
 			String conf = createConfig("PUT", BASE_URL + "/error", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "400" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Bad request (400)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
 	/**
-	 * Performs a PUT request and receives a response with internal server error status.
+	 * Performs a PUT request and receives a response with internal server error
+	 * status.
 	 */
 	@Test
 	public void test35_PutRequest_Then_ReceiveResponseWithServerErrorStatus() {
 		try {
 			String conf = createConfig("PUT", BASE_URL + "/error-server", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "500" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Internal server error (500)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -733,14 +751,15 @@ public class HttpRequestActionTests {
 			HttpRequestBuilder.instance().setDefaultTimeout(Duration.of(2, ChronoUnit.SECONDS));
 
 			String conf = createConfig("PUT", BASE_URL + "/timeout", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "request timed out" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "request timed out" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -755,7 +774,8 @@ public class HttpRequestActionTests {
 	public void test37_DeleteRequestWithoutDataParameter_Then_NoThrowsException() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/success", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(true);
@@ -771,7 +791,8 @@ public class HttpRequestActionTests {
 	public void test38_DeleteRequestWithoutHeaderParameter_Then_NoThrowsException() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/success", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(true);
@@ -787,7 +808,8 @@ public class HttpRequestActionTests {
 	public void test39_DeleteRequest_Then_ReceiveResponseWithData() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/success", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			String expected = "success!";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -804,7 +826,8 @@ public class HttpRequestActionTests {
 	public void test40_DeleteRequest_Then_ReceiveEmptyResponse() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/empty", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			String expected = "";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -815,14 +838,16 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a DELETE request with correct headers and receives a response with OK status.
+	 * Performs a DELETE request with correct headers and receives a response with
+	 * OK status.
 	 */
 	@Test
 	public void test41_DeleteRequestWithCorrectHeaders_Then_ReceiveResponseWithOkStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-ok.json");
 			String conf = createConfig("DELETE", BASE_URL + "/header", headers);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			String expected = "success!";
 			String obtained = ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
@@ -833,21 +858,23 @@ public class HttpRequestActionTests {
 	}
 
 	/**
-	 * Performs a DELETE request with incorrect headers and receives a response with error status.
+	 * Performs a DELETE request with incorrect headers and receives a response with
+	 * error status.
 	 */
 	@Test
 	public void test42_DeleteRequestWithIncorrectHeaders_Then_ReceiveResponseWithErrorStatus() {
 		try {
 			String headers = TestUtils.readFile(ActionDirectiveTestUtils.DIR_REQUEST_RESOURCES + "headers-error.json");
 			String conf = createConfig("DELETE", BASE_URL + "/header", headers);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "404" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Bad request (404)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -858,32 +885,35 @@ public class HttpRequestActionTests {
 	public void test43_DeleteRequest_Then_ReceiveResponseWithErrorStatus() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/error", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "400" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Bad request (400)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
 	/**
-	 * Performs a DELETE request and receives a response with internal server error status.
+	 * Performs a DELETE request and receives a response with internal server error
+	 * status.
 	 */
 	@Test
 	public void test44_DeleteRequest_Then_ReceiveResponseWithServerErrorStatus() {
 		try {
 			String conf = createConfig("DELETE", BASE_URL + "/error-server", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "500" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "Internal server error (500)" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -897,14 +927,15 @@ public class HttpRequestActionTests {
 			HttpRequestBuilder.instance().setDefaultTimeout(Duration.of(2, ChronoUnit.SECONDS));
 
 			String conf = createConfig("DELETE", BASE_URL + "/timeout", null);
-			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf + "; result>\n[=result]\n</@action>";
+			String dynamicTemplate = mandatoryLine() + "<@action type=\"HttpRequest\" conf=" + conf
+					+ "; result>\n[=result]\n</@action>";
 
 			ActionDirectiveTestUtils.executeTestWithStringTemplate(dynamicTemplate);
 			assertTrue(TAG_TEST_FAIL, false);
 		} catch (Exception e) {
-			String[] obtained = e.getMessage().split(":");
-			String[] expected = new String[] { "HttpRequestBuilderException", "request timed out" };
-			ActionDirectiveTestUtils.compared(expected, Arrays.copyOfRange(obtained, 1, obtained.length));
+			String[] obtained = cleanErrorMessage(e.getMessage());
+			String[] expected = new String[] { HttpRequestPerformException.class.getCanonicalName(), "request timed out" };
+			ActionDirectiveTestUtils.compared(expected, obtained);
 		}
 	}
 
@@ -929,6 +960,11 @@ public class HttpRequestActionTests {
 			json.add("headers", JsonParser.parseString(headers));
 		}
 		return json.toString();
+	}
+
+	private String[] cleanErrorMessage(String msg) {
+		String [] aux = msg.split("\n")[0].split(":");
+		return Arrays.copyOfRange(aux, 2, aux.length);
 	}
 
 }
