@@ -70,26 +70,28 @@ public class HttpRequestBuilder {
 
     private String executeRequest(HttpRequest request) throws HttpRequestPerformException {
     	String result = null;
+        HttpResponse<String> response = null;
 
         try {
-        	HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-        	if (response != null) {
-                if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                    result = response.body();
-                }
-                // Custom error codes
-                else  if (response.statusCode() >= 400 && response.statusCode() < 500) {
-                    throw new HttpRequestPerformException("Bad request (" + response.statusCode() + ")");
-                }
-                else  if (response.statusCode() >= 500 && response.statusCode() < 600) {
-                    throw new HttpRequestPerformException("Internal server error (" + response.statusCode() + ")");
-                }
-            }
+        	response = client.send(request, BodyHandlers.ofString());
 		}
         catch (Exception e) {
         	throw new HttpRequestPerformException(e.getMessage());
 		}
-        
+
+        if (response != null) {
+            if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                result = response.body();
+            }
+            // Custom error codes
+            else  if (response.statusCode() >= 400 && response.statusCode() < 500) {
+                throw new HttpRequestPerformException("Bad request (" + response.statusCode() + ")");
+            }
+            else  if (response.statusCode() >= 500 && response.statusCode() < 600) {
+                throw new HttpRequestPerformException("Internal server error (" + response.statusCode() + ")");
+            }
+        }
+
         return result;
     }
 
