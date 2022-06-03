@@ -1,0 +1,8 @@
+<#assign configuration=providers(type="FileProvider", file="./src/test/resources/action-samples/request/http-post-conf.json")>
+<#assign data=providers(type="FileProvider", file="./src/test/resources/action-samples/request/data.json")>
+
+<@action type="HttpRequest" data=data conf=configuration; result>
+    <h3>Test 03: HTTP Request with POST method</h3>
+    <h5>Expected: OK</h5>
+    <p><pre>${result}</pre></p>
+</@action>

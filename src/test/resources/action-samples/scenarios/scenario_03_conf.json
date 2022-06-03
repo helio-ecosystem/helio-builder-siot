@@ -1,0 +1,4 @@
+[
+  { "method": "GET", "url": "https://helio-tfm.mocklab.io/json" },
+  { "method": "POST", "url": "https://helio-tfm.mocklab.io/data-json" }
+]

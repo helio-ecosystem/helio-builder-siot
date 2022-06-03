@@ -1,0 +1,7 @@
+<#assign json=providers(type="FileProvider", file="./src/test/resources/action-samples/directive/data.txt")>
+
+<@action type="Mockup" conf="{\"name\": \"test03\"}"; result>
+    <h3>Test 03: Directive without 'data' parameter in action directive</h3>
+    <h5>Expected: ERROR</h5>
+    <p><pre>${result}</pre></p>
+</@action>

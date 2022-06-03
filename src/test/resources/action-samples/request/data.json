@@ -1,0 +1,10 @@
+{
+    "contact": {
+        "id": "1234",
+        "firstName": "Test firstname",
+        "lastName": "Test lastname",
+        "email": "test@test.es",
+        "dateAdded": "2022-05-17",
+        "companyId": "1111"
+    }
+}
