@@ -93,12 +93,12 @@ public class SIoTMemoryUnit implements SIoTUnit {
 			if (!translations.isEmpty()) {
 				model.putAll(translations);
 				translations.clear();
-				this.template.process(model, out);
-				return out.toString();
+				
 			} else {
 				logger.warn("no data to inject in the template");
-				return null;
 			}
+			this.template.process(model, out);
+			return out.toString();
 		} catch (IOException e) {
 			throw new IncompatibleMappingException(e.toString());
 		} catch (TemplateException e) {
