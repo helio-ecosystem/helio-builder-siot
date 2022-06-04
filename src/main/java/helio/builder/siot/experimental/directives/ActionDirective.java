@@ -4,18 +4,21 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
-import freemarker.template.*;
-import helio.blueprints.exceptions.ActionException;
 import org.apache.jena.ext.com.google.common.base.Strings;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import freemarker.core.Environment;
-
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateDirectiveModel;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 import helio.blueprints.Action;
+import helio.blueprints.exceptions.ActionException;
 import helio.builder.siot.experimental.actions.ActionBuilder;
-import helio.builder.siot.experimental.actions.errors.ActionNotFoundException;
 import helio.builder.siot.experimental.actions.errors.ActionParameterNotFoundException;
 
 public class ActionDirective implements TemplateDirectiveModel {

@@ -1,14 +1,14 @@
 package helio.builder.siot.experimental.actions.module.request;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import helio.blueprints.Action;
 import helio.blueprints.exceptions.ActionException;
 import helio.builder.siot.experimental.actions.errors.HttpRequestParametersException;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class HttpRequestAction implements Action {
 
@@ -30,7 +30,7 @@ public class HttpRequestAction implements Action {
 			this.url = configuration.get("url").getAsString().strip();
 		}
 		if (configuration.has("headers")) {
-			this.headers = new HashMap<String, String>();
+			this.headers = new HashMap<>();
 			JsonObject jsonHeaders = configuration.get("headers").getAsJsonObject();
 			for (Map.Entry<String, JsonElement> header : jsonHeaders.entrySet()) {
 				this.headers.put(header.getKey(), header.getValue().getAsString());

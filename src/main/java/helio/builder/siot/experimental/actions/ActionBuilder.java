@@ -15,21 +15,21 @@ public class ActionBuilder {
 
 	private static ActionBuilder builder = null;
 	private List<ActionModule> modules = null;
-	
+
 	private ActionBuilder() {
-		modules = new ArrayList<ActionModule>();
+		modules = new ArrayList<>();
 		modules.add(new ActionValidatorModule());
 		modules.add(new ActionRequestModule());
 		modules.add(new ActionDatabaseModule());
 	}
-	
+
 	public static ActionBuilder instance() {
 		if (builder == null) {
 			builder = new ActionBuilder();
 		}
 		return builder;
 	}
-	
+
 	public List<ActionModule> moduleList() {
 		return modules;
 	}
@@ -41,11 +41,11 @@ public class ActionBuilder {
 		}
 		return added;
 	}
-	
+
 	public boolean removeModule(ActionModule newModule) {
 		return modules.removeIf(m -> m.moduleName().equals(newModule.moduleName()));
 	}
-	
+
 	public Action build(String type) throws ActionException {
 		return modules.stream()
 				.filter(m -> m.isDefined(type))
@@ -53,5 +53,5 @@ public class ActionBuilder {
 				.orElseThrow(() -> new ActionNotFoundException(type))
 				.build(type);
 	}
-	
+
 }

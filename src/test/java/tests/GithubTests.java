@@ -14,8 +14,8 @@ import helio.blueprints.exceptions.TranslationUnitExecutionException;
 
 public class GithubTests {
 
-	
-	
+
+
 	@Test
 	public void testIssue2() throws IncompatibleMappingException, TranslationUnitExecutionException, IncorrectMappingException, ExtensionNotFoundException, InterruptedException, ExecutionException {
 		ExecutorService service = Executors.newFixedThreadPool(4);
@@ -23,7 +23,7 @@ public class GithubTests {
 		String result = TestUtils.runUnit(unit, service);
 		//String expected = TestUtils.readFile("./src/test/resources/github-issues/05-expected.csv");
 		service.shutdownNow();
-		
+
 		System.out.println(result);
 	}
 }

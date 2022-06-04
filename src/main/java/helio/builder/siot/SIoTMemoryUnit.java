@@ -63,7 +63,8 @@ public class SIoTMemoryUnit implements SIoTUnit {
 					.forEach(elem -> elem.setFuture(service.submit(elem.getRunnable())));
 		}
 	}
-	
+
+	@Override
 	public List<String> getDataTranslated(Map<String, Object> model) throws TranslationUnitExecutionException {
 		List<String> templates = new ArrayList<>();
 		try {
@@ -93,7 +94,7 @@ public class SIoTMemoryUnit implements SIoTUnit {
 			if (!translations.isEmpty()) {
 				model.putAll(translations);
 				translations.clear();
-				
+
 			} else {
 				logger.warn("no data to inject in the template");
 			}

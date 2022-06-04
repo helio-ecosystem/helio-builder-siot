@@ -3,20 +3,17 @@ package tests.actions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import org.junit.Test;
 
-import helio.blueprints.exceptions.ActionException;
+import com.google.gson.JsonParser;
+
 import helio.builder.siot.experimental.actions.errors.JsonValidatorException;
 import helio.builder.siot.experimental.actions.errors.XmlValidatorException;
-import org.apache.jena.base.Sys;
-import org.junit.Test;
 import tests.TestUtils;
 
 /**
  * Set of test which validates the validator action module.
- * 
+ *
  * @author Emilio
  *
  */

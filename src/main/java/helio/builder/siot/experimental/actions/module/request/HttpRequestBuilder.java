@@ -1,7 +1,5 @@
 package helio.builder.siot.experimental.actions.module.request;
 
-import helio.builder.siot.experimental.actions.errors.HttpRequestPerformException;
-
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -12,8 +10,10 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
+import helio.builder.siot.experimental.actions.errors.HttpRequestPerformException;
+
 public class HttpRequestBuilder {
-    
+
     private static HttpRequestBuilder singleton = null;
     private HttpClient client;
     private Duration defaultTimeout;

@@ -1,7 +1,5 @@
 package tests;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -96,7 +94,7 @@ public class SynchronousTests {
 		//Assert.assertTrue(result.trim().equals(expected));
 
 	}
-	
+
 	@Test
 	public void test08() throws Exception {
 		//String expected = TestUtils.readFile("./src/test/resources/sync-tests/06-expected.nt");

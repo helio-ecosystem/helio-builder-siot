@@ -7,12 +7,12 @@ import helio.builder.siot.experimental.actions.module.request.HttpRequestAction;
 public class ActionRequestModule implements ActionModule {
 
 	private final static String MODULE_NAME = "Request";
-	
+
 	@Override
 	public String moduleName() {
 		return MODULE_NAME;
 	}
-	
+
 	@Override
 	public Action build(String type) throws ActionNotFoundException {
 		Action action;
@@ -23,7 +23,7 @@ public class ActionRequestModule implements ActionModule {
 		else {
 			throw new ActionNotFoundException(type);
 		}
-		
+
 		return action;
 	}
 

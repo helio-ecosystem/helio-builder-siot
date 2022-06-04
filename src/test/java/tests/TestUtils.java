@@ -21,9 +21,9 @@ import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import helio.builder.siot.SIoTBuilder;
 
 public class TestUtils {
-	
+
 	static {
-		
+
 		try {
 			Components.registerAndLoad("https://github.com/helio-ecosystem/helio-providers-web/releases/download/v0.1.1/helio-providers-web-0.1.1.jar",
 					 "helio.providers.HttpProvider", ComponentType.PROVIDER);
@@ -50,7 +50,7 @@ public class TestUtils {
 			e.printStackTrace();
 		}
 
-	
+
 
 		try {
 			Components.registerAndLoad(
@@ -95,8 +95,8 @@ public class TestUtils {
 
 		return unit;
 	}
-	
-	
+
+
 
 	public static String runUnit(TranslationUnit unit, ExecutorService service) throws InterruptedException, ExecutionException, TranslationUnitExecutionException {
 		String result =  "";

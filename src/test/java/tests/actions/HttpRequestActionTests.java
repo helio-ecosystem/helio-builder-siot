@@ -3,29 +3,27 @@ package tests.actions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import freemarker.template.TemplateModelException;
 import helio.blueprints.components.ComponentType;
 import helio.blueprints.components.Components;
 import helio.builder.siot.experimental.actions.errors.HttpRequestParametersException;
 import helio.builder.siot.experimental.actions.errors.HttpRequestPerformException;
 import helio.builder.siot.experimental.actions.module.request.HttpRequestBuilder;
-import org.apache.jena.base.Sys;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import tests.TestUtils;
-
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 
 /**
  * Set of test which validates the HTTP Request Action from Action Request
  * Module.
- * 
+ *
  * @author Emilio
  *
  */
@@ -43,7 +41,7 @@ public class HttpRequestActionTests {
 		 * null -> jar localization
 		 * string -> route for the class in this project
 		 * enum -> component type
-		 * 
+		 *
 		 * Components.register(null,
 		 * "helio.builder.siot.experimental.actions.module.request.HttpRequestAction",
 		 * ComponentType.ACTION);

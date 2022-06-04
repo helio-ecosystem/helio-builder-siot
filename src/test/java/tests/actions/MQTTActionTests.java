@@ -18,7 +18,7 @@ public class MQTTActionTests {
 	public void test01_SendDataToMQTTTopic() {
 		assertTrue(false);
 	}
-	
+
 	/**
 	 * Send data to a MQTT topic without broker configuration
 	 * and the action module throws an error.
@@ -27,7 +27,7 @@ public class MQTTActionTests {
 	public void test02_SendDataToMQTTWithoutBrokerConfiguration() {
 		assertTrue(false);
 	}
-	
+
 	/**
 	 * Send data to a MQTT topic with invalid broker configuration
 	 * and the action module throws an error.
@@ -36,5 +36,5 @@ public class MQTTActionTests {
 	public void test03_SendDataToMQTTWithWrongBrokerConfiguration() {
 		assertTrue(false);
 	}
-	
+
 }

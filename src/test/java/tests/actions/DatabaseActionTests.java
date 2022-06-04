@@ -18,7 +18,7 @@ public class DatabaseActionTests {
 	public void test01_StoreDataInElasticsearchDatabase() {
 		assertTrue(false);
 	}
-	
+
 	/**
 	 * Store data to MySQL database.
 	 */
@@ -26,7 +26,7 @@ public class DatabaseActionTests {
 	public void test02_StoreDataInMySQLDatabase() {
 		assertTrue(false);
 	}
-	
+
 	/**
 	 * Store data with no database configuration
 	 * and the action module throws an error.
@@ -35,7 +35,7 @@ public class DatabaseActionTests {
 	public void test03_StoreDataWithoutDatabaseConfiguration() {
 		assertTrue(false);
 	}
-	
+
 	/**
 	 * Store data with invalid database configuration
 	 * and the action module throws an error.
@@ -44,5 +44,5 @@ public class DatabaseActionTests {
 	public void test04_StoreDataWithWrongDatabaseConfiguration() {
 		assertTrue(false);
 	}
-	
+
 }

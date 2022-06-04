@@ -9,9 +9,9 @@ import helio.builder.siot.experimental.actions.errors.JsonValidatorException;
 
 /**
  * Action class for Validator Module encharge of validating JSON schemas.
- * 
+ *
  * @author Emilio
- * 
+ *
  */
 public class JsonValidatorAction implements Action {
 

@@ -3,19 +3,17 @@ package tests.actions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-
-import helio.builder.siot.experimental.actions.errors.ActionNotFoundException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import helio.builder.siot.experimental.actions.ActionBuilder;
+import helio.builder.siot.experimental.actions.errors.ActionNotFoundException;
 import helio.builder.siot.experimental.actions.errors.ActionParameterNotFoundException;
 
 /**
  * Set of test which validates the action directive.
- * 
+ *
  * @author Emilio
  *
  */
