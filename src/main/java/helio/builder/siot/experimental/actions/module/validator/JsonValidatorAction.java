@@ -5,10 +5,12 @@ import com.google.gson.JsonParser;
 
 import helio.blueprints.Action;
 import helio.blueprints.exceptions.ActionException;
-import helio.builder.siot.experimental.actions.errors.JsonValidatorException;
 
 /**
  * Action class for Validator Module encharge of validating JSON schemas.
+ * Return a json as String value with the following structure:
+ * - "status": "ok" if it is a valid json or "error" instead.
+ * - "message" (Optional). A status description used for "error" status.
  * 
  * @author Emilio
  * 
@@ -24,14 +26,16 @@ public class JsonValidatorAction implements Action {
 
 	@Override
 	public String run(String values) throws ActionException {
-		String result = "";
+		JsonObject response = new JsonObject();
 		try {
-			result = JsonParser.parseString(values).getAsJsonObject().toString();
+			JsonParser.parseString(values).getAsJsonObject().toString();
+			response.addProperty("status", "ok");
 		}
 		catch (Exception e) {
-			throw new JsonValidatorException("Invalid JSON format: " + e.getMessage());
+			response.addProperty("status", "error");
+			response.addProperty("message", "Invalid JSON format: " + e.getMessage());
 		}
-		return result;
+		return response.toString();
 	}
 
 }

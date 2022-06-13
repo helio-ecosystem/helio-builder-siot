@@ -1,6 +1,5 @@
 <#assign json=providers(type="FileProvider", file="./src/test/resources/action-samples/validator/json-error.json")>
 
 <@action type="JsonValidator" data=json; result>
-    <h3>Test 01: Json with an invalid schema</h3>
-    <p><pre>${result}</pre></p>
+    [=result]
 </@action>
