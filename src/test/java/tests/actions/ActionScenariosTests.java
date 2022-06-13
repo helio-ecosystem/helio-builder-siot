@@ -1,5 +1,7 @@
 package tests.actions;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import org.junit.Test;
 
@@ -48,14 +50,17 @@ public class ActionScenariosTests {
 	@Test
 	public void scenario02_Then_ThrowsJsonSyntaxException() {
 		try {
-			String result = ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_01.txt");
-			assertTrue(TAG_TEST_FAIL, false);
+			String expected = "error";
+			JsonObject obtained = JsonParser.parseString(
+					ActionDirectiveTestUtils.executeTestWithTemplate(
+					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_02.txt")).getAsJsonObject();
+
+			assertTrue(obtained.has("status"));
+			assertTrue(obtained.has("message"));
+			assertEquals(expected, obtained.get("status").getAsString().strip().toLowerCase());
 		}
 		catch (Exception e) {
-			String expected = JsonSyntaxException.class.getCanonicalName().strip();
-			String obtained = e.getMessage().split(":")[0].strip();
-			assertEquals(expected, obtained);
+			assertTrue(e.getMessage(), false);
 		}
 	}
 

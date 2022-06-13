@@ -1,10 +1,20 @@
-<#assign confRaw=providers(type="FileProvider", file="./src/test/resources/action-samples/scenarios/scenario_03_conf.json")>
+<#assign confRaw="[
+  { \"method\": \"GET\", \"url\": \"https://helio-tfm.mocklab.io/json\" },
+  { \"method\": \"POST\", \"url\": \"https://helio-tfm.mocklab.io/data-json\" }
+]">
+
+
 <#assign conf=confRaw?eval>
 
 <@action type="HttpRequest" conf=conf[0]; r1>
-    <@action type="JsonValidator" data=r1>
-        <@action type="HttpRequest" data=r1 conf=conf[1]; r2>
-            [=r2]
-        </@action>
+    <@action type="JsonValidator" data=r1; validationRaw>
+        <#assign validation=validationRaw?eval>
+        <#if validation.status == "ok">
+            <@action type="HttpRequest" data=r1 conf=conf[1]; r2>
+                [=r2]
+            </@action>
+        <#else>
+            error
+        </#if>
     </@action>
 </@action>

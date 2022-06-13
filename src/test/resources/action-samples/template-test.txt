@@ -1,0 +1,4 @@
+<#assign configuration=providers(type="FileProvider", file="./src/test/resources/action-samples/request//http-get-conf.json")>
+<@action type="HttpRequest" conf={"method":"GET","url":"https://helio-tfm.mocklab.io/empty"}; result>
+[=result]
+</@action>
