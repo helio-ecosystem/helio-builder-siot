@@ -9,6 +9,7 @@ import com.google.gson.JsonParser;
 import freemarker.template.TemplateModelException;
 import helio.blueprints.components.ComponentType;
 import helio.blueprints.components.Components;
+import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.builder.siot.experimental.actions.errors.HttpRequestParametersException;
 import helio.builder.siot.experimental.actions.errors.HttpRequestPerformException;
 import helio.builder.siot.experimental.actions.module.request.HttpRequestBuilder;
@@ -36,7 +37,7 @@ public class HttpRequestActionTests {
 	private final String TAG_TEST_FAIL = "This test should be fail.";
 
 	@BeforeClass
-	public static void setup() {
+	public static void setup() throws ExtensionNotFoundException {
 		// For version 0.4.22
 		/*
 		 * Params:
@@ -49,7 +50,7 @@ public class HttpRequestActionTests {
 		 * ComponentType.ACTION);
 		 */
 
-		Components.register(null, "helio.builder.siot.experimental.actions.module.request.HttpRequestAction",
+		Components.registerAndLoad(null, "helio.builder.siot.experimental.actions.module.request.HttpRequestAction",
 				ComponentType.ACTION);
 
 	}

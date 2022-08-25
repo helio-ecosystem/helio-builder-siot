@@ -6,6 +6,8 @@ import java.util.Map;
 
 import freemarker.template.*;
 import helio.blueprints.exceptions.ActionException;
+import helio.blueprints.exceptions.ExtensionNotFoundException;
+
 import org.apache.jena.ext.com.google.common.base.Strings;
 
 import com.google.gson.JsonObject;
@@ -14,8 +16,7 @@ import com.google.gson.JsonParser;
 import freemarker.core.Environment;
 
 import helio.blueprints.Action;
-import helio.builder.siot.experimental.actions.ActionBuilder;
-import helio.builder.siot.experimental.actions.errors.ActionNotFoundException;
+import helio.blueprints.components.Components;
 import helio.builder.siot.experimental.actions.errors.ActionParameterNotFoundException;
 
 public class ActionDirective implements TemplateDirectiveModel {
@@ -37,9 +38,10 @@ public class ActionDirective implements TemplateDirectiveModel {
 			throw new TemplateModelException(e.getMessage());
 		}
 
+		
 		// Execute action
 		try {
-			Action action = ActionBuilder.instance().build(paramsHolder.type);
+			Action action = Components.newActionInstance(paramsHolder.type);
 			action.configure(paramsHolder.configuration);
 			String result = action.run(paramsHolder.data);
 
@@ -47,7 +49,7 @@ public class ActionDirective implements TemplateDirectiveModel {
 			if (result != null && loopVars.length > 0) {
 				loopVars[0] = new SimpleScalar(result);
 			}
-		} catch (ActionException e) {
+		} catch (ActionException | ExtensionNotFoundException e) {
 			throw new TemplateModelException(e.getMessage());
 		}
 

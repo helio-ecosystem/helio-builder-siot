@@ -10,7 +10,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import helio.builder.siot.experimental.actions.ActionBuilder;
+import helio.blueprints.components.ComponentType;
+import helio.blueprints.components.Components;
+import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.builder.siot.experimental.actions.errors.ActionParameterNotFoundException;
 
 /**
@@ -24,14 +26,11 @@ public class ActionDirectiveTests {
 	private final String TAG_TEST_FAIL = "This test should be fail.";
 
 	@BeforeClass
-	public static void addMockupModule() {
-		ActionBuilder.instance().addActionModule(ActionDirectiveTestUtils.getMockupModule());
+	public static void setup() throws ExtensionNotFoundException {
+		Components.registerAndLoad(null,"helio.builder.siot.experimental.actions.module.request.HttpRequestAction",
+				ComponentType.ACTION);
 	}
-
-	@AfterClass
-	public static void removeMockupModule() {
-		ActionBuilder.instance().removeModule(ActionDirectiveTestUtils.getMockupModule());
-	}
+	
 
 	/**
 	 * Validates that 'type' parameter in action directive is mandatory.
