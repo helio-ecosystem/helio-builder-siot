@@ -49,8 +49,7 @@ public class HttpRequestActionTests {
 		 * ComponentType.ACTION);
 		 */
 
-		Components.register(null, "helio.builder.siot.experimental.actions.module.request.HttpRequestAction",
-				ComponentType.ACTION);
+		Components.register(null, "helio.builder.siot.experimental.actions.module.request.HttpRequestAction", ComponentType.ACTION);
 
 	}
 

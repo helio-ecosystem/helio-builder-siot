@@ -1,0 +1,25 @@
+{
+  "args": {}, 
+  "data": "{\"p\":[\"{Electricity/ProductionBreakdown}{field|PRODUCAO_TOTAL}{date|2022-03-11 12:44:35}{unit|GWh}{useGasDate|False}\",\"last_update_hour\",\"{Electricity/ImportBalance}{field|TOTAL}{date|2022-03-11 12:44:35}{unit|GWh}{useGasDate|False}\",\"{Electricity/ProductionBreakdown}{field|RENOVAVEL}{date|2022-03-11 12:44:35}{unit|%}{country|PT}{percentageField|PRODUCAO_TOTAL}{useGasDate|False}\",\"{Electricity/DiaryMarketPrices}{field|PRECO_PT}{date|2022-03-11 12:44:35}{unit|\u20ac/MWh}{useGasDate|False}\"]}", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2", 
+    "Content-Length": "492", 
+    "Content-Type": "application/json; charset=utf-8", 
+    "Host": "httpbin.org", 
+    "User-Agent": "Java/17.0.1", 
+    "X-Amzn-Trace-Id": "Root=1-631f521f-261541dd63cfd19f4a4d8999"
+  }, 
+  "json": {
+    "p": [
+      "{Electricity/ProductionBreakdown}{field|PRODUCAO_TOTAL}{date|2022-03-11 12:44:35}{unit|GWh}{useGasDate|False}", 
+      "last_update_hour", 
+      "{Electricity/ImportBalance}{field|TOTAL}{date|2022-03-11 12:44:35}{unit|GWh}{useGasDate|False}", 
+      "{Electricity/ProductionBreakdown}{field|RENOVAVEL}{date|2022-03-11 12:44:35}{unit|%}{country|PT}{percentageField|PRODUCAO_TOTAL}{useGasDate|False}", 
+      "{Electricity/DiaryMarketPrices}{field|PRECO_PT}{date|2022-03-11 12:44:35}{unit|\u20ac/MWh}{useGasDate|False}"
+    ]
+  }, 
+  "origin": "139.47.89.115", 
+  "url": "https://httpbin.org/post"
+}

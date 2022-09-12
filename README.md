@@ -10,7 +10,7 @@ The SIoT software aretefact is distributed as the following Maven depencency.
 <dependency>
   <groupId>io.github.helio-ecosystem</groupId>
   <artifactId>helio-builder-siot</artifactId>
-  <version>0.1.7</version>
+  <version>0.1.8</version>
 </dependency>
 ````
 Check this link for the whole [list of versions](https://search.maven.org/artifact/io.github.helio-ecosystem/helio-builder-siot)

@@ -2,14 +2,21 @@ package tests;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import helio.blueprints.TranslationUnit;
+import helio.builder.siot.rx.SIoTRxBuilder;
 
+@Deprecated
 public class SynchronousTests {
 
 	@Test
@@ -109,4 +116,30 @@ public class SynchronousTests {
 		//Assert.assertTrue(result.trim().equals(expected));
 
 	}
+	
+	
+
+	@Test
+	public void test09() throws Exception {
+		ExecutorService service = Executors.newScheduledThreadPool(5);
+		TranslationUnit unit = TestUtils.build("./src/test/resources/sync-tests/01-mapping.ftl");
+		int quantum = 1000;
+		while(true) {
+			try {
+			String result = TestUtils.runUnit(unit, service);
+			System.out.println(result);
+			quantum = quantum*2;
+			if(quantum > 1000000000)
+				break;
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		//Assert.assertTrue(TestUtils.equals(result, expected));
+	}
+	
+	
+	
 }

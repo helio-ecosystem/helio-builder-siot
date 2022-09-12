@@ -27,8 +27,9 @@ import helio.blueprints.exceptions.IncompatibleMappingException;
 import helio.blueprints.exceptions.IncorrectMappingException;
 import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import helio.builder.siot.experimental.directives.ActionDirective;
-import helio.builder.siot.methods.Handlers;
+import helio.builder.siot.ftl.Handlers;
 
+@Deprecated
 public class SIoTBuilder implements UnitBuilder {
 
 	private static final String HANDLERS_FUNCTION_NAME = "handlers";

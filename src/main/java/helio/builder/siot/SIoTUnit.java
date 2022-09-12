@@ -6,6 +6,7 @@ import java.util.Map;
 import helio.blueprints.TranslationUnit;
 import helio.blueprints.exceptions.TranslationUnitExecutionException;
 
+@Deprecated
 public interface SIoTUnit extends TranslationUnit {
 
 	public List<String> getDataTranslated(Map<String, Object> model) throws TranslationUnitExecutionException;

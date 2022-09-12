@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.helio-ecosystem</groupId>
 	<artifactId>helio-builder-siot</artifactId>
-	<version>0.1.7</version>
-	<name>JSON LD 1.1 Mapping Processor</name>
+	<version>0.1.8</version>
+	<name>SIoT Mapping Processor</name>
 
 	<properties>
 		<maven.compiler.target>11</maven.compiler.target>
@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>io.github.helio-ecosystem</groupId>
 			<artifactId>helio-blueprints</artifactId>
-			<version>0.4.22</version>
+			<version>0.4.24</version>
 		</dependency>
 		<dependency>
 		    <groupId>io.github.andreacimminoarriaga</groupId>

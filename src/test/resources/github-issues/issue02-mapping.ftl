@@ -1,0 +1,3 @@
+<#assign config= {"url":"https://httpbin.org/post","method":"POST","body":{"p":["{Electricity/ProductionBreakdown}{field|PRODUCAO_TOTAL}{date|2022-03-11 12:44:35}{unit|GWh}{useGasDate|False}","last_update_hour","{Electricity/ImportBalance}{field|TOTAL}{date|2022-03-11 12:44:35}{unit|GWh}{useGasDate|False}","{Electricity/ProductionBreakdown}{field|RENOVAVEL}{date|2022-03-11 12:44:35}{unit|%}{country|PT}{percentageField|PRODUCAO_TOTAL}{useGasDate|False}","{Electricity/DiaryMarketPrices}{field|PRECO_PT}{date|2022-03-11 12:44:35}{unit|€/MWh}{useGasDate|False}"]},"headers":{"Content-Length":516,"Content-Type":"application/json; charset=utf-8"}}>
+<#assign data=providers("HttpProvider", config)>
+[=data]

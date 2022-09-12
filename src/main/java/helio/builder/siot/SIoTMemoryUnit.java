@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,6 +29,7 @@ import helio.blueprints.exceptions.IncorrectMappingException;
 import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import helio.builder.siot.runnable.SyncFreemarkerRunnable;
 
+@Deprecated
 public class SIoTMemoryUnit implements SIoTUnit {
 
 	public static Logger logger = LoggerFactory.getLogger(SIoTMemoryUnit.class);
@@ -81,7 +83,7 @@ public class SIoTMemoryUnit implements SIoTUnit {
 		return templates;
 	}
 
-	@Override
+
 	public List<String> getDataTranslated() throws TranslationUnitExecutionException {
 		return getDataTranslated(null);
 	}
@@ -129,54 +131,53 @@ public class SIoTMemoryUnit implements SIoTUnit {
 
 	private static final String CODE_EXCEPTION = "translation_exception_internal_error-AAABBB";
 
-	@Override
-	public Runnable getTask() throws TranslationUnitExecutionException {
+
+	public Callable<String> getTask(Map<String, Object> arguments) throws TranslationUnitExecutionException {
 		loadRunnables(true);
-		Runnable runnable = new Runnable() {
 
-			@Override
-			public void run() {
-
-					for (int index = 0; index < triplets.size(); index++) {
-						SIoTTriplet triplet = triplets.get(index);
-						boolean sync = !(triplet.getProvider() instanceof AsyncDataProvider);
-						try {
-						if (sync) {
-							SyncFreemarkerRunnable runable = new SyncFreemarkerRunnable(triplet.getProvider());
-							String result = runable.run();
-							translations.put(triplet.getVariable(), result);
-						} else {
-							List<String> results = new ArrayList<>();
-							results.addAll(triplet.getRunnable().getQueue());
-							triplet.getRunnable().getQueue().clear();
-							if (!results.isEmpty()) {
-								translations.put(triplet.getVariable(), results.get(results.size() - 1));
-							} else {
-								translations.put(triplet.getVariable(), "");
-
-							}
-						}
-						} catch (Exception e) {
-							translations.put(CODE_EXCEPTION, e.toString());
-
-						}
-					}
-
-			}
-
-		};
 		try {
 			service.awaitTermination(500, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			throw new TranslationUnitExecutionException(e.toString());
 		}
-		return runnable;
+		return new Callable<String>() {
+
+			@Override
+			public String call() throws Exception {
+				for (int index = 0; index < triplets.size(); index++) {
+					SIoTTriplet triplet = triplets.get(index);
+					boolean sync = !(triplet.getProvider() instanceof AsyncDataProvider);
+					try {
+					if (sync) {
+						SyncFreemarkerRunnable runable = new SyncFreemarkerRunnable(triplet.getProvider());
+						String result = runable.run();
+						translations.put(triplet.getVariable(), result);
+					} else {
+						List<String> results = new ArrayList<>();
+						results.addAll(triplet.getRunnable().getQueue());
+						triplet.getRunnable().getQueue().clear();
+						if (!results.isEmpty()) {
+							translations.put(triplet.getVariable(), results.get(results.size() - 1));
+						} else {
+							translations.put(triplet.getVariable(), "");
+
+						}
+					}
+					} catch (Exception e) {
+						translations.put(CODE_EXCEPTION, e.toString());
+
+					}
+				}
+				return null;
+			}
+			
+			
+
+		};
+		
 	}
 
-	@Override
-	public void flushDataTranslated() {
-		translations.clear();
-	}
+	
 
 	@Override
 	public int getScheduledTime() {
@@ -189,5 +190,7 @@ public class SIoTMemoryUnit implements SIoTUnit {
 		this.setUnitType(UnitType.Scheduled);
 
 	}
+
+
 
 }

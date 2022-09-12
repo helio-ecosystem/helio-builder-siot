@@ -11,6 +11,7 @@ import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 
+@Deprecated
 public class SyncFreemarkerRunnable {
 
 	private DataProvider provider;

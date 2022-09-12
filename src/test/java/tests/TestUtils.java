@@ -2,6 +2,7 @@ package tests;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -19,13 +20,14 @@ import helio.blueprints.exceptions.IncompatibleMappingException;
 import helio.blueprints.exceptions.IncorrectMappingException;
 import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import helio.builder.siot.SIoTBuilder;
+import helio.builder.siot.rx.SIoTRxBuilder;
 
 public class TestUtils {
 	
 	static {
 		
 		try {
-			Components.registerAndLoad("https://github.com/helio-ecosystem/helio-providers-web/releases/download/v0.1.1/helio-providers-web-0.1.1.jar",
+			Components.registerAndLoad("https://github.com/helio-ecosystem/helio-providers-web/releases/download/v0.1.2/helio-providers-web-0.1.2.jar",
 					 "helio.providers.HttpProvider", ComponentType.PROVIDER);
 		} catch (ExtensionNotFoundException e) {
 			e.printStackTrace();
@@ -36,12 +38,7 @@ public class TestUtils {
 		} catch (ExtensionNotFoundException e) {
 			e.printStackTrace();
 		}
-		try {
-			Components.registerAndLoad("/Users/andreacimmino/Desktop/helio-handler-csv-0.1.0.jar",
-					"handlers.CsvHandler", ComponentType.HANDLER);
-		} catch (ExtensionNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 		try {
 			Components.registerAndLoad(
 					"https://github.com/helio-ecosystem/helio-handler-jayway/releases/download/v0.1.1/helio-handler-jayway-0.1.1.jar",
@@ -69,11 +66,17 @@ public class TestUtils {
 			e.printStackTrace();
 		}
 		try {
-			Components.registerAndLoad(null, "helio.builder.jld11map.DummyProvider", ComponentType.PROVIDER);
-
+			Components.registerAndLoad(null, "helio.builder.siot.DummyProvider", ComponentType.PROVIDER);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		try {
+			Components.registerAndLoad(null, "helio.builder.siot.experimental.actions.module.request.HttpRequestAction", ComponentType.ACTION);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Components.getRegistered().forEach(elem -> System.out.println(elem.getClazz()));
 	}
 
 	public static String readFile(String file){
@@ -96,24 +99,49 @@ public class TestUtils {
 		return unit;
 	}
 	
-	
+	public static TranslationUnit buildRx(String mappingFile) throws IncompatibleMappingException, TranslationUnitExecutionException, IncorrectMappingException, ExtensionNotFoundException {
+		TranslationUnit unit = null;
 
+			String mapping = readFile(mappingFile);
+			UnitBuilder builder = new SIoTRxBuilder();
+			Set<TranslationUnit> list = builder.parseMapping(mapping);
+			unit = list.iterator().next();
+
+		return unit;
+	}
+	
 	public static String runUnit(TranslationUnit unit, ExecutorService service) throws InterruptedException, ExecutionException, TranslationUnitExecutionException {
+		return runUnit(unit, service, null);
+	}
+
+	public static String runUnit(TranslationUnit unit, ExecutorService service, Map<String,Object> map) throws InterruptedException, ExecutionException, TranslationUnitExecutionException {
 		String result =  "";
 
-		Future<?> f = service.submit(unit.getTask());
-		f.get();
-		result = unit.getDataTranslated().get(0);
-		f.cancel(true);
-		service.shutdown();
+		Future<String> f = service.submit(unit.getTask(map));
+		result = f.get();
+		//f.cancel(true);
+		//service.shutdown();
 
 		return result;
 	}
 	public static final Gson GSON = new Gson();
 	public static boolean equals(String result, String expected) {
+		try {
 		JsonObject object1 = GSON.fromJson(result, JsonObject.class);
 		JsonObject object2 = GSON.fromJson(expected, JsonObject.class);
 
 		return object1.equals(object2);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static void load() {
+	
+	}
+	
+	public static JsonObject toJson(String result) {
+		return  GSON.fromJson(result, JsonObject.class);
 	}
 }

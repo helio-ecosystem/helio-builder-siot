@@ -6,6 +6,7 @@ import java.util.concurrent.Future;
 import helio.blueprints.DataProvider;
 import helio.builder.siot.runnable.FreemarkerHelioRunnable;
 
+@Deprecated
 class SIoTTriplet {
 
 	private Future<?> future;
