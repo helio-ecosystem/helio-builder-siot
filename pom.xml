@@ -6,6 +6,8 @@
 	<artifactId>helio-builder-siot</artifactId>
 	<version>0.1.9</version>
 	<name>SIoT Mapping Processor</name>
+	<description>A language for enabling semantic interoperability in IoT based on workflows</description>
+	<url>https://helio-ecosystem.github.io/helio-builder-siot</url>
 
 	<properties>
 		<maven.compiler.target>11</maven.compiler.target>
@@ -16,13 +18,29 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Andrea Cimmino</name>
+			<email>cimmino@fi.upm.es</email>
+			<organization>Universidad Politecnica de Madrid, Ontology Engineering Group</organization>
+			<organizationUrl>https://www.oeg-upm.net/</organizationUrl>
+		</developer>
+	</developers>
+
 	<dependencies>
 		<dependency>
 			<groupId>io.github.helio-ecosystem</groupId>
 			<artifactId>helio-blueprints</artifactId>
 			<version>0.4.26</version>
 		</dependency>
-		
+
 		<!-- Loggin -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -41,14 +59,14 @@
 			<version>4.11</version>
 			<!-- <scope>test</scope> -->
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/org.apache.jena/jena-arq -->
 		<dependency>
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
 			<version>2.3.31</version>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>
