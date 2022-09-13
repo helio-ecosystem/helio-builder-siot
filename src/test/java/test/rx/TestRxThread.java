@@ -10,7 +10,7 @@ import helio.blueprints.components.Components;
 import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.blueprints.exceptions.TranslationUnitExecutionException;
 import helio.builder.siot.rx.RxThread;
-import tests.TestUtils;
+import test.TestUtils;
 
 public class TestRxThread {
 

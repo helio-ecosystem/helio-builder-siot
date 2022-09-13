@@ -14,7 +14,7 @@ import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.blueprints.exceptions.IncompatibleMappingException;
 import helio.blueprints.exceptions.IncorrectMappingException;
 import helio.blueprints.exceptions.TranslationUnitExecutionException;
-import tests.TestUtils;
+import test.TestUtils;
 
 public class GithubTests {
 

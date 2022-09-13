@@ -1,1 +1,1 @@
-{ "method": "GET", "url": "https://helio-tfm.mocklab.io/success" }
+{ "method": "GET", "url": "https://httpbin.org/get" }

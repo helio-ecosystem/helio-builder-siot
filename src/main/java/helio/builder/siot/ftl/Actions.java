@@ -20,7 +20,6 @@ import helio.blueprints.Action;
 import helio.blueprints.components.Components;
 import helio.blueprints.exceptions.ActionException;
 import helio.blueprints.exceptions.ExtensionNotFoundException;
-import helio.builder.siot.experimental.actions.errors.ActionParameterNotFoundException;
 
 public class Actions implements TemplateDirectiveModel {
 
@@ -38,7 +37,7 @@ public class Actions implements TemplateDirectiveModel {
 		// Validate directive parameters
 		try {
 			validateParameters(paramsHolder);
-		} catch (ActionParameterNotFoundException e) {
+		} catch (ActionException e) {
 			throw new TemplateModelException(e.getMessage());
 		}
 
@@ -83,9 +82,9 @@ public class Actions implements TemplateDirectiveModel {
 		return paramsHolder;
 	}
 
-	private boolean validateParameters(ParamsHolder params) throws ActionParameterNotFoundException {
+	private boolean validateParameters(ParamsHolder params) throws ActionException {
 		if (Strings.isNullOrEmpty(params.type)) {
-			throw new ActionParameterNotFoundException(PARAM_TYPE);
+			throw new ActionException("Parameter '" + PARAM_TYPE + "' not found in action directive.");
 		}
 		return true;
 	}

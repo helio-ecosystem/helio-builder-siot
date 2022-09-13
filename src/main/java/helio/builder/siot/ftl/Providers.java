@@ -38,6 +38,7 @@ public class Providers implements TemplateMethodModelEx {
 			
 			if(task==null) {
 				DataProvider providerObj = Components.newProviderInstance(provider);
+			
 				providerObj.configure(config);
 				task = new RxThread(providerObj);
 				service.submit(task);

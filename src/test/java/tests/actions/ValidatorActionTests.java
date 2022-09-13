@@ -3,16 +3,14 @@ package tests.actions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import helio.blueprints.exceptions.ActionException;
-import helio.builder.siot.experimental.actions.errors.JsonValidatorException;
-import helio.builder.siot.experimental.actions.errors.XmlValidatorException;
-import org.apache.jena.base.Sys;
+import com.google.gson.JsonParser;
+import helio.blueprints.TranslationUnit;
+import test.TestUtils;
+
 import org.junit.Test;
-import tests.TestUtils;
 
 /**
  * Set of test which validates the validator action module.
@@ -22,19 +20,20 @@ import tests.TestUtils;
  */
 public class ValidatorActionTests {
 
+	private ExecutorService service = Executors.newFixedThreadPool(2);
+
+	
 	/**
-	 * The JSON source is incorrect and the validator throws a JsonSyntaxException.
+	 * The JSON source is incorrect and the validator throws a JsonSyntaxException within the mapping.
 	 */
 	@Test
 	public void test01_ValidateInvalidJsonDataWithJsonSchema() {
 		try {
-			ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "01_json-template.txt");
-			assertTrue(false);
+			TranslationUnit unit = TestUtils.buildRx(ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "01_json-template.txt");
+			String  res = TestUtils.runUnit(unit, service);
+			assertTrue(res.contains("com.google.gson.stream.MalformedJsonException: Expected ':' at line 4 column 17 path $.sequence"));
 		} catch (Exception e) {
-			String expected = JsonValidatorException.class.getCanonicalName().strip();
-			String obtained = e.getMessage().split(":")[2].strip();
-			assertEquals(expected, obtained);
+			assertEquals(true, false);
 		}
 	}
 
@@ -45,8 +44,10 @@ public class ValidatorActionTests {
 	public void test02_ValidateCorrectJsonDataWithJsonSchema() {
 		try {
 			String expected = TestUtils.readFile(ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "json-valid.json");
-			String obtained = ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "02_json-template.txt");
+			
+			TranslationUnit unit = TestUtils.buildRx(ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "02_json-template.txt");
+			String  obtained = TestUtils.runUnit(unit, service);
+		
 			assertEquals(JsonParser.parseString(expected), JsonParser.parseString(obtained));
 		} catch (Exception e) {
 			assertTrue(e.getMessage(), false);
@@ -59,14 +60,12 @@ public class ValidatorActionTests {
 	@Test
 	public void test03_ValidateJsonDataWithXmlSchema() {
 		try {
-			String obtained = ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "03_json-template.txt");
-
-			assertTrue(ActionDirectiveTestUtils.TAG_TEST_FAIL, false);
+			TranslationUnit unit = TestUtils.buildRx(ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "03_json-template.txt");
+			String  obtained = TestUtils.runUnit(unit, service);
+			
+			assertEquals(obtained.trim(), "{\"status\":\"error\",\"message\":\"Invalid XML format: Content is not allowed in prolog.\"}");
 		} catch (Exception e) {
-			String expected = XmlValidatorException.class.getCanonicalName().strip();
-			String obtained = e.getMessage().split(":")[2].strip();
-			assertEquals(expected, obtained);
+			assertTrue(false);
 		}
 	}
 
@@ -76,14 +75,12 @@ public class ValidatorActionTests {
 	@Test
 	public void test04_ValidateInvalidXmlDataWithXmlSchema() {
 		try {
-			String obtained = ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "04_xml-template.txt");
-
-			assertTrue(ActionDirectiveTestUtils.TAG_TEST_FAIL, false);
+			TranslationUnit unit = TestUtils.buildRx(ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "04_xml-template.txt");
+			String  obtained = TestUtils.runUnit(unit, service);
+			
+			assertTrue(obtained.contains("{\"status\":\"error\",\"message\":\"Invalid XML format: The end-tag for element type \\\"catalog\\\" must end with a '>' delimiter.\"}"));
 		} catch (Exception e) {
-			String expected = XmlValidatorException.class.getCanonicalName().strip();
-			String obtained = e.getMessage().split(":")[2].strip();
-			assertEquals(expected, obtained);
+			assertTrue(false);
 		}
 	}
 
@@ -94,9 +91,10 @@ public class ValidatorActionTests {
 	public void test05_ValidateCorrectXmlDataWithXmlSchema() {
 		try {
 			String expected = TestUtils.readFile(ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "xml-valid.xml");
-			String obtained = ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "05_xml-template.txt");
-
+			TranslationUnit unit = TestUtils.buildRx(ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "05_xml-template.txt");
+			String  obtained = TestUtils.runUnit(unit, service);
+			
+			
 			assertEquals(expected.strip(), obtained.strip());
 		} catch (Exception e) {
 			assertTrue(e.getMessage(), false);
@@ -109,14 +107,12 @@ public class ValidatorActionTests {
 	@Test
 	public void test06_ValidateXmlDataWithJsonSchema() {
 		try {
-			String obtained = ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "06_xml-template.txt");
-
-			assertTrue(ActionDirectiveTestUtils.TAG_TEST_FAIL, false);
+			TranslationUnit unit = TestUtils.buildRx(ActionDirectiveTestUtils.DIR_VALIDATOR_RESOURCES + "06_xml-template.txt");
+			String  obtained = TestUtils.runUnit(unit, service);
+		
+			assertTrue(obtained.contains("Invalid JSON format: com.google.gson.stream.MalformedJsonException"));
 		} catch (Exception e) {
-			String expected = JsonValidatorException.class.getCanonicalName().strip();
-			String obtained = e.getMessage().split(":")[2].strip();
-			assertEquals(expected, obtained);
+			assertTrue(false);
 		}
 	}
 

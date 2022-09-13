@@ -2,27 +2,22 @@ package test.rx;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 import helio.blueprints.TranslationUnit;
-import helio.blueprints.UnitBuilder;
 import helio.blueprints.UnitType;
 import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.blueprints.exceptions.IncompatibleMappingException;
 import helio.blueprints.exceptions.IncorrectMappingException;
 import helio.blueprints.exceptions.TranslationUnitExecutionException;
-import helio.builder.siot.SIoTBuilder;
-import tests.TestUtils;
+import test.TestUtils;
 
 public class RxSynchronousTests {
 

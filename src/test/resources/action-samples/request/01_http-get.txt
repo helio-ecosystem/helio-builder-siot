@@ -4,5 +4,5 @@
 <@action type="HttpRequestAction" data="no-data" conf=configuration; result>
     <h3>Test 01: HTTP Request with GET method</h3>
     <h5>Expected: OK</h5>
-    <p><pre>${result}</pre></p>
+    <p><pre>[=result]</pre></p>
 </@action>

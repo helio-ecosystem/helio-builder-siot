@@ -1,4 +1,5 @@
-<#assign xml=providers(type="FileProvider", file="./src/test/resources/action-samples/validator/xml-valid.xml")>
+<#assign conf={ "file": "./src/test/resources/action-samples/validator/xml-valid.xml"}>
+<#assign xml=providers("FileProvider",conf)>
 
 <@action type="JsonValidator" data=xml; result>
     [=result]

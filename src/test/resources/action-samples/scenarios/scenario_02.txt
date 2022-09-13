@@ -1,5 +1,0 @@
-<#assign conf=providers(type="FileProvider", file="./src/test/resources/action-samples/scenarios/scenario_02_conf.json")>
-<@action type="HttpRequest" conf=conf; r1>
-    <@action type="JsonValidator" data=r1>
-    </@action>
-</@action>

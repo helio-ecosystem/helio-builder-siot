@@ -1,9 +1,8 @@
-<#assign jpath=handlers(“JsonHandler”)>
-<#assign data=providers(type=“URLProvider”, url=“https://api.ipma.pt/open-data/observation/meteorology/stations/observations.json”)>
+<#assign jpath=handlers("JsonHandler")>
+<#assign data=providers(type="URLProvider", { "url" : "https://api.ipma.pt/open-data/observation/meteorology/stations/observations.json" })>
 <#assign datajs=data?eval_json>
 {
-  “@context”: “https://www.w3.org/2019/wot/td/v1”,
-  “id”: “urn:dev:ops:32473-WoTLamp-“,
+  "id": "urn:id:fake",
 	<#list datajs as tstamp, valuex>
 		<#list valuex as station, readings>
 				<#if readings?has_content>

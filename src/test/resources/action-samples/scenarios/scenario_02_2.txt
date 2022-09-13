@@ -1,0 +1,7 @@
+<#assign providerConf = "{\"file\":\"./src/test/resources/action-samples/scenarios/scenario_02_conf.json\"}">
+<#assign conf=providers("FileProvider", providerConf)>
+<@action type="HttpRequest" conf=conf; r1>
+    <#assign jdata=r1?eval>
+    <@action type="JsonValidator" data=jdata.origin; result>
+    </@action>
+</@action>

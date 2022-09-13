@@ -1,9 +1,16 @@
 package tests.actions;
 
-import com.google.gson.JsonSyntaxException;
+
+import helio.blueprints.TranslationUnit;
+import helio.blueprints.exceptions.IncorrectMappingException;
+import test.TestUtils;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Class with different scenarios from action feature.
@@ -14,6 +21,7 @@ import static org.junit.Assert.*;
 public class ActionScenariosTests {
 
 	private final String TAG_TEST_FAIL = "This test should be fail.";
+	private ExecutorService service = Executors.newFixedThreadPool(2);
 
 	/**
 	 * A test with an action directive inside other action directive. The aim of this test is the template priority in directives.
@@ -27,8 +35,8 @@ public class ActionScenariosTests {
 	@Test
 	public void scenario01_Then_FirstParentSecondChild() {
 		try {
-			String result = ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_01.txt");
+			TranslationUnit unit = TestUtils.buildRx(ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_01.txt");
+			String result = TestUtils.runUnit(unit, service);
 			String[] expected = new String[] {"father", "child"};
 			String[] obtained = result.strip().split("\n");
 			ActionDirectiveTestUtils.compared(expected, obtained);
@@ -46,14 +54,32 @@ public class ActionScenariosTests {
 	 * 3. Throws a JsonSyntaxException.
 	 */
 	@Test
+	public void scenario02_Then_SuccessfullValidation() {
+		try {
+			TranslationUnit unit = TestUtils.buildRx(ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_02_1.txt");
+			String result = TestUtils.runUnit(unit, service);
+			assertTrue(result.contains("{\"status\":\"ok\"}"));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Scenario 02:
+	 * 1. Send a GET request.
+	 * 2. Validates the response expected with Json format.
+	 * 3. Throws a JsonSyntaxException.
+	 */
+	@Test
 	public void scenario02_Then_ThrowsJsonSyntaxException() {
 		try {
-			String result = ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_01.txt");
+			TranslationUnit unit = TestUtils.buildRx(ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_02_2.txt");
+			TestUtils.runUnit(unit, service);
 			assertTrue(TAG_TEST_FAIL, false);
 		}
 		catch (Exception e) {
-			String expected = JsonSyntaxException.class.getCanonicalName().strip();
+			String expected = IncorrectMappingException.class.getCanonicalName().strip();
 			String obtained = e.getMessage().split(":")[0].strip();
 			assertEquals(expected, obtained);
 		}
@@ -70,8 +96,10 @@ public class ActionScenariosTests {
 	@Test
 	public void scenario03_Then_ResponseIsSuccess() {
 		try {
-			String obtained = ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_03.txt");
+			
+			TranslationUnit unit = TestUtils.buildRx(ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_03.txt");
+			String obtained = TestUtils.runUnit(unit, service);
+			
 			String expected = "success!";
 			assertEquals(expected, obtained.strip());
 		}
@@ -90,8 +118,9 @@ public class ActionScenariosTests {
 	@Test
 	public void scenario04_Then_ResponseIsSuccess() {
 		try {
-			String obtained = ActionDirectiveTestUtils.executeTestWithTemplate(
-					ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_04.txt");
+			TranslationUnit unit = TestUtils.buildRx(ActionDirectiveTestUtils.DIR_SCENARIOS_RESOURCES + "scenario_04.txt");
+			String obtained = TestUtils.runUnit(unit, service);
+			
 			String expected = "success!";
 			assertEquals(expected, obtained.strip());
 		}

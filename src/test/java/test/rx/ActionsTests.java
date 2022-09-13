@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import helio.blueprints.TranslationUnit;
-import tests.TestUtils;
+import test.TestUtils;
 
 public class ActionsTests {
 

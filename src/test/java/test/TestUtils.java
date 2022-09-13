@@ -1,4 +1,4 @@
-package tests;
+package test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +19,6 @@ import helio.blueprints.exceptions.ExtensionNotFoundException;
 import helio.blueprints.exceptions.IncompatibleMappingException;
 import helio.blueprints.exceptions.IncorrectMappingException;
 import helio.blueprints.exceptions.TranslationUnitExecutionException;
-import helio.builder.siot.SIoTBuilder;
 import helio.builder.siot.rx.SIoTRxBuilder;
 
 public class TestUtils {
@@ -72,11 +71,24 @@ public class TestUtils {
 		}
 		
 		try {
-			Components.registerAndLoad(null, "helio.builder.siot.experimental.actions.module.request.HttpRequestAction", ComponentType.ACTION);
+			Components.registerAndLoad("https://github.com/helio-ecosystem/helio-action-http-request/releases/download/v0.1.0/helio-action-http-request-0.1.0.jar", "helio.action.http.HttpRequest", ComponentType.ACTION);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Components.getRegistered().forEach(elem -> System.out.println(elem.getClazz()));
+		
+		try {
+			Components.registerAndLoad("https://github.com/helio-ecosystem/helio-action-xml-validator/releases/download/v0.1.0/helio-action-xml-validator-0.1.0.jar", "helio.actions.validator.XmlValidator", ComponentType.ACTION);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			Components.registerAndLoad("https://github.com/helio-ecosystem/helio-action-json-validator/releases/download/v0.1.0/helio-action-json-validator-0.1.0.jar", "helio.actions.validator.JsonValidator", ComponentType.ACTION);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	public static String readFile(String file){
@@ -88,16 +100,7 @@ public class TestUtils {
 		return null;
 	}
 
-	public static TranslationUnit build(String mappingFile) throws IncompatibleMappingException, TranslationUnitExecutionException, IncorrectMappingException, ExtensionNotFoundException {
-		TranslationUnit unit = null;
-
-			String mapping = readFile(mappingFile);
-			UnitBuilder builder = new SIoTBuilder();
-			Set<TranslationUnit> list = builder.parseMapping(mapping);
-			unit = list.iterator().next();
-
-		return unit;
-	}
+	
 	
 	public static TranslationUnit buildRx(String mappingFile) throws IncompatibleMappingException, TranslationUnitExecutionException, IncorrectMappingException, ExtensionNotFoundException {
 		TranslationUnit unit = null;

@@ -1,8 +1,13 @@
-
-<#assign json=providers(type="FileProvider", file="./src/test/resources/action-samples/validator/json-valid.json")>
+<#assign conf={ "file": "./src/test/resources/action-samples/validator/json-valid.json"}>
+<#assign json=providers("FileProvider",conf)>
 
 <@action type="JsonValidator" data=json; result>
-    [=result]
+    <#assign jsonRes = result?eval>
+    <#if jsonRes.status == "ok">
+        [=json]
+    <#else>
+        [=result]
+    </#if>
 </@>
 
 
