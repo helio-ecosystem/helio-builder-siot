@@ -1,33 +1,40 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>io.github.helio-ecosystem</groupId>
-    <artifactId>helio-builder-siot</artifactId>
-    <version>0.1.7</version>
-    <name>SIoT Mappings builder</name>
-    <description>A language for enabling semantic interoperability in IoT</description>
-    <url>https://helio-ecosystem.github.io/helio-builder-siot</url>
-    
-    <properties>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.release>11</maven.compiler.release>
-        <slf4jVersion>1.6.1</slf4jVersion>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>io.github.helio-ecosystem</groupId>
+	<artifactId>helio-builder-siot</artifactId>
+	<version>0.1.10</version>
+	<name>SIoT Mapping Processor</name>
+	<description>A language for enabling semantic interoperability in IoT based on workflows</description>
+	<url>https://helio-ecosystem.github.io/helio-builder-siot</url>
 
-    <developers>
-        <developer>
-            <name>Andrea Cimmino</name>
-            <email>cimmino@fi.upm.es</email>
-            <organization>Universidad Politecnica de Madrid, Ontology Engineering Group</organization>
-            <organizationUrl>https://www.oeg-upm.net/</organizationUrl>
-        </developer>
-    </developers>
+	<properties>
+		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.release>11</maven.compiler.release>
+		<slf4jVersion>1.6.1</slf4jVersion>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 
-    <scm>
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Andrea Cimmino</name>
+			<email>cimmino@fi.upm.es</email>
+			<organization>Universidad Politecnica de Madrid, Ontology Engineering Group</organization>
+			<organizationUrl>https://www.oeg-upm.net/</organizationUrl>
+		</developer>
+	</developers>
+
+ <scm>
         <connection>scm:git:git://github.com/helio-ecosystem/helio-builder-siot.git</connection>
         <developerConnection>scm:git:ssh://github.com:helio-ecosystem/helio-builder-siot.git</developerConnection>
         <url>https://helio-ecosystem.github.io/helio-builder-siot/</url>
@@ -45,64 +52,46 @@
     </distributionManagement>
 
 
-    <dependencies>
-        <dependency>
-            <groupId>io.github.helio-ecosystem</groupId>
-            <artifactId>helio-blueprints</artifactId>
-            <version>0.4.22</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.andreacimminoarriaga</groupId>
-            <artifactId>sparql-streamline</artifactId>
-            <version>0.1.5</version>
-        </dependency>
-        <!-- Loggin -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4jVersion}</version>
-        </dependency>
-        <!-- Binding for System.out -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4jVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <!-- <scope>test</scope> -->
-        </dependency>
-        <dependency>
-            <groupId>com.apicatalog</groupId>
-            <artifactId>titanium-json-ld</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.json</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.jena/jena-arq -->
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <version>2.3.31</version>
-        </dependency>
-        
-    </dependencies>
-
-    
-    <licenses>
-        <license>
-            <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-        </license>
-    </licenses>
 
 
-    <build>
+	<dependencies>
+		<dependency>
+			<groupId>io.github.helio-ecosystem</groupId>
+			<artifactId>helio-blueprints</artifactId>
+			<version>0.4.26</version>
+		</dependency>
+
+		<!-- Loggin -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4jVersion}</version>
+		</dependency>
+		<!-- Binding for System.out -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4jVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<!-- <scope>test</scope> -->
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.jena/jena-arq -->
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>2.3.31</version>
+		</dependency>
+
+	</dependencies>
+
+
+
+	 <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -166,5 +155,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>
