@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
+import helio.blueprints.AsyncDataProvider;
 import helio.blueprints.DataProvider;
 import helio.blueprints.components.Components;
 import helio.builder.siot.rx.RxThread;
@@ -33,14 +34,16 @@ public class Providers implements TemplateMethodModelEx {
 			// DONE: add onlyLast and onlyFist
 			String id = String.valueOf(provider.hashCode())+String.valueOf(config.hashCode())+String.valueOf(type);
 			
-			
 			RxThread task = tasks.get(id);
 			
 			if(task==null) {
 				DataProvider providerObj = Components.newProviderInstance(provider);
 			
 				providerObj.configure(config);
-				task = new RxThread(providerObj);
+				int syncStatus = 1; // 1 means the RxThread will not give data until something from the povider is given
+				if(providerObj instanceof AsyncDataProvider)
+					syncStatus = 0; // 0 means the thread does not waits to have data, it returns what is has in that moment of time (which can be nothing)
+				task = new RxThread(providerObj,syncStatus);
 				service.submit(task);
 				if(task.isAsynchronous())
 					tasks.put(id, task);
@@ -58,6 +61,7 @@ public class Providers implements TemplateMethodModelEx {
 			
 						
 		}catch(Exception e) {
+			e.printStackTrace();
 			throw new TemplateModelException(e.toString());
 		}
 	}

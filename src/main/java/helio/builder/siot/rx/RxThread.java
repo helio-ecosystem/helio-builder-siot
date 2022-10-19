@@ -22,8 +22,8 @@ public class RxThread extends Thread {
 	
 	public CountDownLatch latch;
 	
-	public RxThread(DataProvider provider) {
-		latch = new CountDownLatch(1);
+	public RxThread(DataProvider provider, int status) {
+		latch = new CountDownLatch(status); // 1 for sync, 0 for async
 		isAsynchronous = provider instanceof AsyncDataProvider;
 		source = Flowable.create(provider, BackpressureStrategy.BUFFER);
 	}

@@ -26,7 +26,7 @@ public class TestRxThread {
 		int index = 0;
 		boolean res = true;
 		while (index < 100) {
-			RxThread thread = new RxThread(provider);
+			RxThread thread = new RxThread(provider,1);
 			thread.start();
 			res &= TestUtils.equals(file, thread.getReadings().get(0));
 			

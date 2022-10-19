@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.helio-ecosystem</groupId>
 	<artifactId>helio-builder-siot</artifactId>
-	<version>0.1.9</version>
+	<version>0.1.10</version>
 	<name>SIoT Mapping Processor</name>
 	<description>A language for enabling semantic interoperability in IoT based on workflows</description>
 	<url>https://helio-ecosystem.github.io/helio-builder-siot</url>

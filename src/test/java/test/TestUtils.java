@@ -25,6 +25,14 @@ public class TestUtils {
 	
 	static {
 		
+
+		try {
+			Components.registerAndLoad("/Users/andreacimmino/Desktop/helio-provider-mqtt-0.1.0-jar-with-dependencies.jar",
+					 "helio.providers.MqttProvider", ComponentType.PROVIDER);
+		} catch (ExtensionNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		try {
 			Components.registerAndLoad("https://github.com/helio-ecosystem/helio-providers-web/releases/download/v0.1.2/helio-providers-web-0.1.2.jar",
 					 "helio.providers.HttpProvider", ComponentType.PROVIDER);
@@ -65,7 +73,7 @@ public class TestUtils {
 			e.printStackTrace();
 		}
 		try {
-			Components.registerAndLoad(null, "helio.builder.siot.DummyProvider", ComponentType.PROVIDER);
+			Components.registerAndLoad(null, "helio.builder.siot.utils.DummyProvider", ComponentType.PROVIDER);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
