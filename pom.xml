@@ -32,6 +32,10 @@
 			<organization>Universidad Politecnica de Madrid, Ontology Engineering Group</organization>
 			<organizationUrl>https://www.oeg-upm.net/</organizationUrl>
 		</developer>
+		<developer>
+			<name>Juan Emilio Crespo Perán</name>
+			<email>emiliocrespoperan@gmail.com</email>
+		</developer>
 	</developers>
 
 	<dependencies>
