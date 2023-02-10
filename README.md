@@ -1,6 +1,11 @@
-# Semantic Interoperable IoT (SIoT) mapping builder
+# Reactive Semantic Interoperable IoT (SIoTRx) mappings
 
-The SIoT mappings are endowed for providing semantic interoperability among IoT infrastructures. They allow to define translation rules from heterogeneous data sources to RDF (including JSON-LD 1.1) and vice versa.
+The SIoTRx mappings are endowed for providing semantic interoperability among IoT infrastructures. They allow to define translation rules from heterogeneous data sources to RDF (including JSON-LD 1.1) and vice versa.
+
+## Using and learning SIoTRx mapping
+
+SIoTRx mappings can be used directly in the [Helio Playground](https://helio-playground.linkeddata.es/) that also counts with numerous tutorials to learn their syntax.
+
 
 ## Install
 
